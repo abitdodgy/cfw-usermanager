@@ -35,6 +35,8 @@ Download and file and run the included SQL file to create the database. Currentl
 
 You need to create the schema from the included SQL file. You will also need to setup your email credentials in /config/settings.cfm.
 
+**Requires ColdFusion 9+ or Railo 3+.**
+
 
 Versioning
 ----------
