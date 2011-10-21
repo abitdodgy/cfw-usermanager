@@ -7,7 +7,7 @@
 		<section>
 
 			<div class="page-header">
-				<h1>Home</h1>
+				<h1>Website's Home Page</h1>
 			</div>
 
 			<div class="row">

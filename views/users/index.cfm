@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="span11">
-					<h2>Home</h2>
+					<h2>User's Home Page</h2>
 					<p>This is your home page.</p>
 				</div>
 			</div>

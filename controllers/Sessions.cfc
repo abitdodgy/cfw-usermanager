@@ -80,7 +80,7 @@ component
 	}
 
 	/*
-	 * @hint Renders the password reset page.
+	 * @hint Renders the password reset page. If an email address is passed, looks it up and sends an email confirmation email.
 	 */
 	public void function reset() {
 		if ( StructKeyExists(params, "email") ) {
