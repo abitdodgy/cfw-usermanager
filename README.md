@@ -1,7 +1,7 @@
 COLDFUSION ON WHEELS USER MANAGER DEMO
 ======================================
 
-CFW User Manager is a demo app for ColdFusion one Wheels. It's meant to be a toolkit for kickstarting a project that requires session management, password reset, and user and management functionality. The tag "demo app" will be removed in due time once more of the functionality is complete.
+CFW User Manager is a demo app for ColdFusion one Wheels. It's meant to be a toolkit for kickstarting a project that requires session management, password reset, and user and management functionality.
 
 
 Current Version
@@ -9,12 +9,12 @@ Current Version
 
 Current version includes the following functionality:
 
-* User registration
+* User registration with validation;
 * User authentication
-* Update functionality for user profile, email address, and password
-* Password hashing on creation, update, and reset
-* Reset e-mail confirmation functionality
-* Expiring security token functionality for password resets
+* Update functionality for user profile, email address, and password;
+* Password hashing and salting on creation, update, and reset;
+* Confirmation e-mail is sent to confirm password reset requests;
+* Expiring security token functionality for password resets.
 
 
 Coming Soon
@@ -22,9 +22,10 @@ Coming Soon
 
 I will add the following features in later versions.
 
-* Ability to force password update after reset. Currently users are redirect to the update form, but there's nothing stopping them from navigating away. This will require them to initiate the rest process again if their session ends.
-* Administrative tools/user management section section.
-* User roles based security.
+* Ability to force password update after reset. Currently users are redirect to the update form, but there's nothing stopping them from navigating away. This will require them to initiate the rest process again if their session ends;
+* Administrative tools/user management section;
+* User role based security.
+* Tests.
 
 
 Usage
@@ -32,11 +33,13 @@ Usage
 
 Download and file and run the included SQL file to create the database. Currently the admin functionality is not working, but the user roles table is included never the less.
 
+You need to create the schema from the included SQL file. You will also need to setup your email credentials in /config/settings.cfm.
+
 
 Versioning
 ----------
 
-CFW User Manager will be maintained under the Semantic Versioning guidelines as much as possible.
+I'm not really sure how, but I will try to maintain CFW User Manager under the Semantic Versioning guidelines as much as possible (once I've read them, that is).
 
 Releases will be numbered with the follow format:
 
@@ -52,9 +55,9 @@ And constructed with the following guidelines:
 Bug tracker
 -----------
 
-Have a bug? Please create an issue here on GitHub!
+Please create an issue here on GitHub!
 
-https://github.com/twitter/bootstrap/issues
+https://github.com/abitdodgy/cfw-usermanager/issues
 
 
 Author
@@ -68,7 +71,7 @@ Author
 Copyright and license
 ---------------------
 
-Copyright 2011 Mohamad El-Husseini, Inc.
+Copyright 2011 Mohamad El-Husseini.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this work except in compliance with the License.

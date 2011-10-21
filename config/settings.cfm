@@ -14,6 +14,6 @@
 --->
 <cfscript>
 
-	set(functionName="sendEmail", server="smtp.gmail.com", username="service@gamezilla.com.br", password="gzservice11QQ!!", port="587", useTLS="yes");
+	set(functionName="sendEmail", server="smtp.gmail.com", username="test@example.com", password="test", port="587", useTLS="yes");
 
 </cfscript>
