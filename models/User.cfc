@@ -89,13 +89,8 @@ component
 
 	/*
 	 * @hint Sets the user session.
-	 * @todo In order to re-user this function for logging in, and authenticating after a user is created,
-	 * we have to see if user.role is passed in. This is because user.role is included when the user logs in, but not when creating a new user.
 	 */
 	private void function setSession() {
-		if ( ! StructKeyExists(this, "role") ) {
-			this.role = this.role(select="name AS roleName");
-		}
 		connect(this);
 	}
 

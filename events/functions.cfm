@@ -6,8 +6,7 @@
 	public void function connect(required any user) {
 		session.currentUser = {
 			id = arguments.user.id,
-			name = arguments.user.name,
-			role = arguments.user.role.roleName
+			name = arguments.user.name
 		};		
 	}
 
