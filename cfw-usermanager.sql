@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50515
 File Encoding         : 65001
 
-Date: 2011-10-21 08:12:39
+Date: 2011-10-23 18:40:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,7 +43,7 @@ CREATE TABLE `tokens` (
   `token` varchar(36) NOT NULL,
   `expires` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tokens
@@ -61,8 +61,9 @@ CREATE TABLE `users` (
   `salt` varchar(36) NOT NULL,
   `roleid` tinyint(2) NOT NULL,
   `confirmed` enum('1','0') NOT NULL,
+  `createdat` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of users
