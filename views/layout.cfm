@@ -22,7 +22,7 @@
 					</ul>
 					<ul class="nav secondary-nav">
 						<li>#linkTo(text="Home", route="home")#</li>
-						<cfif isUserConnected()>
+						<cfif isConnected()>
 							<li>#linkTo(text="My Profile", controller="users", action="index")#</li>
 							<li>#linkTo(text="Logout", controller="sessions", action="logout")#</li>
 						<cfelse>

@@ -10,16 +10,7 @@
 				<h1>Password Reset</h1>
 			</div>
 
-			<cfif flashKeyExists("message")>
-				<div class="row">
-					<div class="span16">
-						<div class="alert-message block-message info fade in" data-alert="alert">
-							<a href="##" class="close">&times;</a>
-							<p><strong>Great!</strong> #flash("message")#</p>
-						</div>
-					</div>
-				</div>
-			</cfif>
+			#flashMessageTag()#
 
 			<div class="row">
 				<div class="span16">

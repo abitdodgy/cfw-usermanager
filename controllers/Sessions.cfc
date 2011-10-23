@@ -1,7 +1,5 @@
 /*
  * @hint Sessions controller.
- * @todo The dpPasswordReset() could probably do with some imporement. If the token is validateed, it logs the user in and sends him to the update password function.
- * We could probably set a session flag to force the password update form to keep them locked there until they change the password.
  */
 component
 	extends="Controller"
@@ -10,7 +8,7 @@ component
 	 * @hint Constructor
 	 */
 	public void function init() {
-		filters(through="verifyParams", only="login");
+		filters(through="verifyLoginParams", only="login");
 	}
 
 	// --------------------------------------------------    
@@ -19,7 +17,7 @@ component
 	/*
 	 * @hint Interceptor requests without valid params.
 	 */
-	private void function verifyParams() {
+	private void function verifyLoginParams() {
 		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
 			badLogin();
 		}
@@ -33,16 +31,22 @@ component
 	 */
 	public void function doPasswordReset() {
 		if ( StructKeyExists(params, "token") && Len(params.token) ) {
-			local.token = model("token").findOneUnexpired(params.token);
+			var token = model("token").findOneUnexpired(params.token);
 
-			if ( IsObject(local.token) ) {
-				local.user = local.token.user();
-				local.user.generateTemporaryPassword();
+			if ( IsObject(token) ) {
+				var user = token.user();
+				user.generateTemporaryPassword();
 
-				if ( local.user.update() ) {
+				if ( user.update() ) {
 					token.delete();
-					connectUser(local.user);
-					redirectTo(controller="users", action="edit", params="slug=password");	
+					connect(user);
+					redirectTo(
+						controller="users",
+						action="edit",
+						params="slug=password",
+						message="<strong>Hi there!</strong> Please updated your password to continue.",
+						messageType="info"
+					);	
 				}
 			}
 		}
@@ -61,12 +65,13 @@ component
 	 * @hint Attempts to login a user.
 	 */
 	public void function login() {
-		local.user = model("user").findOneByEmail(value=params.email, include="role");
+		var user = model("user").findOneByEmail(value=params.email, include="role");
 
-		if ( ! IsObject(local.user) || ! user.authenticate(params.password) ) {
+		if ( ! IsObject(user) || ! user.authenticate(params.password) ) {
 			badLogin();
 		}
 		else {
+			connect(user);
 			redirectTo(controller="users", action="index");
 		}
 	}
@@ -75,7 +80,7 @@ component
 	 * @hint Attempts to log out a user.
 	 */
 	public void function logout() {
-		disconnectUser();
+		disconnect();
 		redirectTo(route="home");
 	}
 
@@ -84,21 +89,21 @@ component
 	 */
 	public void function reset() {
 		if ( StructKeyExists(params, "email") ) {
-			local.user = model("user").findOneByEmail(params.email);	
+			var user = model("user").findOneByEmail(params.email);	
 
-			if ( IsObject(local.user) ) {
+			if ( IsObject(user) ) {
 				user.generateSecurityToken();
 	
 				sendEmail(
 					from="admin@cfwusermanager.com",
-					to=local.user.email,
+					to=user.email,
 					subject="CFW User Manager Password Assistance",
 					template="templates/passwordReset",
-					recipientName=local.user.name,
-					resetURL="#URLFor(controller="sessions", action="doPasswordReset", onlyPath=false, params="token=#local.user.token.token#")#");
+					recipientName=user.name,
+					resetURL="#URLFor(controller="sessions", action="doPasswordReset", onlyPath=false, params="token=#user.token.token#")#");
 			}
 
-			flashInsert(message="Please check your e-mail for further insturctions. Thank you.");
+			flashInsert(message="<strong>Great!</strong> Please check your e-mail for further insturctions.", messageType="info");
 		}
 	}
 
@@ -110,8 +115,8 @@ component
 	 */
 	private void function badLogin() {
 		param name="params.email" type="string" default="";   
-		flashInsert(errorMessage="We could not log you in. Please try that again.");
-		renderPage(action="index", params=params.email);			
+		flashInsert(message="<strong>Oh snap!</strong> We could not log you in. Please try that again.", messageType="error");
+		renderPage(action="index", params=params.email);
 	}
 
 }

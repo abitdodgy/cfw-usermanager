@@ -1,6 +1,6 @@
 ﻿<cfoutput>
 
-	#contentFor(pageTitle="#user.name# Home Page - CFW User Manager Demo")#
+	#contentFor(pageTitle="#user.name# My Home Page - CFW User Manager Demo")#
 
 	<div class="container">
 
@@ -10,16 +10,7 @@
 				<h1>Hello #user.name#</h1>
 			</div>
 
-			<cfif flashKeyExists("errorMessage")>
-				<div class="row">
-					<div class="span16">
-						<div class="alert-message block-message fade in" data-alert="alert">
-							<a href="##" class="close">&times;</a>
-							<p><strong>Oh Snap!</strong> #flash("errorMessage")#</p>
-						</div>
-					</div>
-				</div>
-			</cfif>
+			#flashMessageTag()#
 
 			<div class="row">
 				<div class="span5">

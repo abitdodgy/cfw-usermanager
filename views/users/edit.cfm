@@ -12,6 +12,8 @@
 				<h1>Edit Profile</h1>
 			</div>
 
+			#flashMessageTag()#
+
 			<div class="row">
 				<div class="span16">
 					<cfswitch expression="#params.slug#">

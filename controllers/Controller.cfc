@@ -11,7 +11,7 @@ component
 	 * @hint Verifies user has access permission.
 	 */
 	private void function isAuthorized() {
-		if ( ! isUserConnected() ) {
+		if ( ! isConnected() ) {
 			redirectTo(route="sessionsHome");
 		}
 	}

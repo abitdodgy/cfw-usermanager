@@ -10,7 +10,7 @@ component
 	public void function init() {
 		filters(through="isAuthorized", only="index,edit,update,delete");
 		filters(through="getActiveUser", only="index,edit,update,delete");
-		verifies(only="create,update", params="user", handler="errorHandler");
+		verifies(only="create,update", params="user", handler="errorHandler", post=true);
 	}
 
 	// --------------------------------------------------    
@@ -79,7 +79,11 @@ component
 			renderPage(action="edit");
 		}
 		else {
-			redirectTo(action="index");
+			redirectTo(
+				action="index",
+				message="<strong>Success!</strong> Your profile was update successfully.",
+				messageType="success"
+			);
 		}
 	}
 
@@ -88,10 +92,14 @@ component
 	 */
 	public void function delete() {
 		if ( ! user.delete() ) {
-			redirectTo(action="index", errorMessage="Sorry, but we could not delete your profile. Please try again.");
+			redirectTo(
+				action="index",
+				message="<strong>Oh snap!</strong> Sorry, but we could not delete your profile due to an internal error. Please try again.",
+				messageType="error"
+			);
 		}
 		else {
-			disconnectUser();
+			disconnect();
 			redirectTo(route="home");
 		}
 	}

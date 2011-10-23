@@ -35,7 +35,7 @@ component
 	}
 
 	/*
-	 * @hint Secures the user object's' password before saving it.
+	 * @hint Secures the password property before saving it.
 	 */
 	private void function securePassword() {
 		if ( StructKeyExists(this, "password") ) {
@@ -57,23 +57,18 @@ component
 	 * @hint Authenticates a user object.
 	 */
 	public boolean function authenticate(required string password) {
-		if ( ! Compare(this.password, hashPassword(arguments.password, this.salt)) ) {
-			this.setSession();
-			return true;
-		}
-		return false;
+		return ! Compare(this.password, hashPassword(arguments.password, this.salt));
 	}
 
 	/*
-	 * @hint Generates an expiring security token for password resets and account conrimation.
+	 * @hint Generates an expiring security token for password resets.
 	 */
 	public void function generateSecurityToken() {
 		this.token = this.createToken(token=CreateUUID(), expires=DateAdd("d", 1, Now()));
 	}
 
 	/*
-	 * @hint Generates a temporary password used when users reset their password.
-	 * @note If a user does not change their password after resetting it, they will have to reset it again.
+	 * @hint Generates a temporary password when users reset their password.
 	 */
 	public void function generateTemporaryPassword() {
 		this.password = CreateUUID();
@@ -94,15 +89,14 @@ component
 
 	/*
 	 * @hint Sets the user session.
-	 * @todo This is a bit of a hack. In order to reuse this function for logging in, and authenticating after a use is created,
-	 * We have to check and see if user.role is passed in. This is because user.role is included when the user logs in, but not when creating a new user.
-	 * We could deal with this by using nested properties to ensure the role object is always passed in, but the security might be abit iffy; we might have to force-set the role in the controller, based on where the user its.
+	 * @todo In order to re-user this function for logging in, and authenticating after a user is created,
+	 * we have to see if user.role is passed in. This is because user.role is included when the user logs in, but not when creating a new user.
 	 */
 	private void function setSession() {
 		if ( ! StructKeyExists(this, "role") ) {
 			this.role = this.role(select="name AS roleName");
 		}
-		connectUser(this);
+		connect(this);
 	}
 
 }
