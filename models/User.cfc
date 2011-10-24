@@ -20,7 +20,7 @@ component
 
 		validatesConfirmationOf("password,email");
 		validatesFormatOf("email");
-		validatesPresenceOf("name,email,password,roleId");
+		validatesPresenceOf("name,email,password");
 		validatesUniquenessOf("email");
 	}
 

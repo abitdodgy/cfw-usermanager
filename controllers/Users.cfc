@@ -69,6 +69,7 @@ component
 	 * @hint Renders the edit user page.
 	 */
 	public void function edit() {
+		user.password = "";
 	}
 
 	/*
