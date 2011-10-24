@@ -38,7 +38,7 @@ component
 	 * @hint Secures the password property before saving it.
 	 */
 	private void function securePassword() {
-		if ( StructKeyExists(this, "password") ) {
+		if ( StructKeyExists(this, "passwordConfirmation") ) {
 			this.password = hashPassword(this.password, this.salt);	
 		}
 	}
@@ -47,7 +47,9 @@ component
 	 * @hint Creates a salt string to use for hashing the password.
 	 */
 	private void function setSalt() {
-		this.salt = CreateUUID();
+		if ( StructKeyExists(this, "passwordConfirmation") ) {
+			this.salt = CreateUUID();	
+		}
 	}
 
 	// --------------------------------------------------    

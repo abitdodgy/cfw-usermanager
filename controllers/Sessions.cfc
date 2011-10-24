@@ -15,7 +15,7 @@ component
     // Filters
 
 	/*
-	 * @hint Interceptor requests without valid params.
+	 * @hint Intercepts requests without valid params.
 	 */
 	private void function verifyLoginParams() {
 		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
