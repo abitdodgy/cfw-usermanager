@@ -70,13 +70,18 @@ component
 	 */
 	public void function edit() {
 		user.password = "";
+		user.passwordConfirmation = "";
 	}
 
 	/*
 	 * @hint Updates a user object.
 	 */
 	public void function update() {
+
 		if ( ! user.update(params.user) ) {
+			user.password = "";
+			user.passwordConfirmation = "";
+
 			renderPage(action="edit");
 		}
 		else {
