@@ -1,18 +1,16 @@
-/**
- * @hint Base Controller.
- */
 component
 	extends="Wheels"
 {
-	// --------------------------------------------------    
-    // Private
+	// --------------------------------------------------
+	// Public
 
-	/**
-	 * @hint Verifies user has access permission.
-	 */
-	private void function isAuthorized() {
+	/** @hint Restricts access to admins only. */
+	private void function restrictAccess(required string userType) {
 		if ( ! isConnected() ) {
-			redirectTo(route="sessionsHome");
+			redirectTo(controller="sessions", action="index");
+		}
+		else if ( ! getConnectedUser("role") == arguments.userType ) {
+			disconnect();
 		}
 	}
 

@@ -52,7 +52,7 @@
 		
 		if (application.wheels.cachePages && (IsNumeric(arguments.$cache) || (IsBoolean(arguments.$cache) && arguments.$cache)))
 		{
-			loc.category = "pages";
+			loc.category = "action";
 			loc.key = $hashedKey(arguments, variables.params);
 			loc.lockName = loc.category & loc.key;
 			loc.conditionArgs = {};
@@ -208,13 +208,9 @@
 	categories="controller-request,rendering" chapters="" functions="setResponse">
 	<cfscript>
 		if ($performedRender())
-		{
 			return Trim(variables.$instance.response);
-		}
 		else
-		{
 			return "";
-		}
 	</cfscript>
 </cffunction>
 
@@ -244,7 +240,7 @@
 		var returnValue = "";
 		returnValue = $renderPage(argumentCollection=arguments);
 		if (!IsNumeric(arguments.$cache))
-			arguments.$cache = application.wheels.cacheSettings[arguments.category].timeout;
+			arguments.$cache = application.wheels.defaultCacheTime;
 		$addToCache(key=arguments.key, value=returnValue, time=arguments.$cache, category=arguments.category);
 	</cfscript>
 	<cfreturn returnValue>
@@ -254,7 +250,7 @@
 	<cfscript>
 		var loc = {};
 		if (!Len(arguments.$template))
-			arguments.$template = "/" & ListChangeDelims(arguments.$controller, "/", ".") & "/" & arguments.$action;
+			arguments.$template = "/" & arguments.$controller & "/" & arguments.$action;
 		arguments.$type = "page";
 		arguments.$name = arguments.$template;
 		arguments.$template = $generateIncludeTemplatePath(argumentCollection=arguments);
@@ -269,7 +265,7 @@
 		var returnValue = "";
 		returnValue = $renderPartial(argumentCollection=arguments);
 		if (!IsNumeric(arguments.$cache))
-			arguments.$cache = application.wheels.cacheSettings[arguments.category].timeout;
+			arguments.$cache = application.wheels.defaultCacheTime;
 		$addToCache(key=arguments.key, value=returnValue, time=arguments.$cache, category=arguments.category);
 	</cfscript>
 	<cfreturn returnValue>
@@ -339,7 +335,7 @@
 		var loc = {};
 		if (application.wheels.cachePartials && (isNumeric(arguments.$cache) || (IsBoolean(arguments.$cache) && arguments.$cache)))
 		{
-			loc.category = "partials";
+			loc.category = "partial";
 			loc.key = $hashedKey(arguments);
 			loc.lockName = loc.category & loc.key;
 			loc.conditionArgs = {};
@@ -374,9 +370,9 @@
 		if (Left(arguments.$name, 1) == "/")
 			loc.include = loc.include & loc.folderName & "/" & loc.fileName; // Include a file in a sub folder to views
 		else if (arguments.$name Contains "/")
-			loc.include = loc.include & "/" & ListChangeDelims(arguments.$controllerName, "/", ".") & "/" & loc.folderName & "/" & loc.fileName; // Include a file in a sub folder of the current controller
+			loc.include = loc.include & "/" & arguments.$controllerName & "/" & loc.folderName & "/" & loc.fileName; // Include a file in a sub folder of the current controller
 		else
-			loc.include = loc.include & "/" & ListChangeDelims(arguments.$controllerName, "/", ".") & "/" & loc.fileName; // Include a file in the current controller's view folder
+			loc.include = loc.include & "/" & arguments.$controllerName & "/" & loc.fileName; // Include a file in the current controller's view folder
 	</cfscript>
 	<cfreturn LCase(loc.include) />
 </cffunction>

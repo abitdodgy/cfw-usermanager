@@ -12,8 +12,5 @@
 	To run with rewriting "On", you need to apply the necessary rewrite rules on the web server first.
 	<cfset set(URLRewriting="Partial")>
 --->
-<cfscript>
 
-	set(functionName="sendEmail", server="smtp.gmail.com", username="test@example.com", password="test", port="587", useTLS="yes");
-
-</cfscript>
+<cfset set(URLRewriting="On")>

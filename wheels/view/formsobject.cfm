@@ -29,14 +29,13 @@
 	<cfargument name="errorClass" type="string" required="false" hint="The class name of the HTML tag that wraps the form control when there are errors.">
 	<cfscript>
 		var loc = {};
-		$args(name="textField", reserved="name,value", args=arguments);
+		$args(name="textField", reserved="type,name,value", args=arguments);
 		arguments.objectName = $objectName(argumentCollection=arguments);
 		if (!StructKeyExists(arguments, "id"))
 			arguments.id = $tagId(arguments.objectName, arguments.property);
 		loc.before = $formBeforeElement(argumentCollection=arguments);
 		loc.after = $formAfterElement(argumentCollection=arguments);
-		if (!StructKeyExists(arguments, "type"))
-			arguments.type = "text";
+		arguments.type = "text";
 		arguments.name = $tagName(arguments.objectName, arguments.property);
 		loc.maxlength = $maxLength(argumentCollection=arguments);
 		if (StructKeyExists(loc, "maxlength"))
@@ -418,189 +417,145 @@
 	<cfargument name="textField" type="string" required="true">
 	<cfscript>
 		var loc = {};
-
-		loc.returnValue = [];
 		loc.value = $formValue(argumentCollection=arguments);
-
-		if (IsSimpleValue(arguments.options))
+		loc.returnValue = "";
+		if (IsQuery(arguments.options))
 		{
-			arguments.options = ListToArray(arguments.options);
-			$optionsForSelect(argumentCollection=arguments);
-		}
-		else if (IsQuery(arguments.options))
-		{
-			arguments.options = $optionsForSelectConvertQuery(argumentCollection=arguments);
-			$optionsForSelect(argumentCollection=arguments);
-		}
-		else if (IsStruct(arguments.options))
-		{
-			arguments.options = $optionsForSelectConvertStruct(argumentCollection=arguments);
-			$optionsForSelect(argumentCollection=arguments);
-		}
-
-		loc.iEnd = ArrayLen(arguments.options);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-		{
-			loc.optionValue = "";
-			loc.optionText = "";
-
-			// see if the value in the array cell is an array, which means the programmer is using multidimensional arrays. if it is, use the first dimension for the key and the second for the value if it exists.
-			if (IsSimpleValue(arguments.options[loc.i]))
+			if (!Len(arguments.valueField) || !Len(arguments.textField))
 			{
-				loc.optionValue = arguments.options[loc.i];
-				loc.optionText = humanize(arguments.options[loc.i]);
-			}
-			else if (IsArray(arguments.options[loc.i]) && ArrayLen(arguments.options[loc.i]) >= 2)
-			{
-				loc.optionValue = arguments.options[loc.i][1];
-				loc.optionText = arguments.options[loc.i][2];
-			}
-			else if (IsStruct(arguments.options[loc.i]) && StructKeyExists(arguments.options[loc.i], "value") && StructKeyExists(arguments.options[loc.i], "text"))
-			{
-				loc.optionValue = arguments.options[loc.i]["value"];
-				loc.optionText = arguments.options[loc.i]["text"];
-			}
-			else if (IsObject(arguments.options[loc.i]))
-			{
-				loc.object = arguments.options[loc.i];
-				if (!Len(arguments.valueField) || !Len(arguments.textField))
+				// order the columns according to their ordinal position in the database table
+				loc.info = GetMetaData(arguments.options);
+				loc.iEnd = ArrayLen(loc.info);
+				loc.columns = "";
+				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+					loc.columns = ListAppend(loc.columns, loc.info[loc.i].name);
+				if (!Len(loc.columns))
 				{
-					loc.propertyNames = loc.object.propertyNames();
-					loc.jEnd = ListLen(loc.propertyNames);
-					for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
-					{
-						loc.propertyName = ListGetAt(loc.propertyNames, loc.j);
-						if (StructKeyExists(loc.object, loc.propertyName))
-						{
-							loc.propertyValue = loc.object[loc.propertyName];
-							if (!Len(arguments.valueField) && IsNumeric(loc.propertyValue))
-							{
-								arguments.valueField = loc.propertyName;
-							}
-							if (!Len(arguments.textField) && !IsNumeric(loc.propertyValue))
-							{
-								arguments.textField = loc.propertyName;
-							}
-						}
-					}
-
+					arguments.valueField = "";
+					arguments.textField = "";
 				}
-				if (StructKeyExists(loc.object, arguments.valueField))
+				else if (ListLen(loc.columns) == 1)
 				{
-					loc.optionValue = loc.object[arguments.valueField];
-				}
-				if (StructKeyExists(loc.object, arguments.textField))
-				{
-					loc.optionText = loc.object[arguments.textField];
-				}
-			}
-			else if (IsStruct(arguments.options[loc.i]))
-			{
-				loc.object = arguments.options[loc.i];
-				// if the struct only has one elment then use the key/value pair
-				if(StructCount(loc.object) eq 1)
-				{
-					loc.key = StructKeyList(loc.object);
-					loc.optionValue = loc.object[loc.key];
-					loc.optionText = LCase(loc.key);
+					arguments.valueField = ListGetAt(loc.columns, 1);
+					arguments.textField = ListGetAt(loc.columns, 1);
 				}
 				else
 				{
-					if (StructKeyExists(loc.object, arguments.valueField))
+					// take the first numeric field in the query as the value field and the first non numeric as the text field
+					loc.iEnd = arguments.options.RecordCount;
+					for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 					{
-						loc.optionValue = loc.object[arguments.valueField];
+						loc.jEnd = ListLen(loc.columns);
+						for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
+						{
+							if (!Len(arguments.valueField) && IsNumeric(arguments.options[ListGetAt(loc.columns, loc.j)][loc.i]))
+								arguments.valueField = ListGetAt(loc.columns, loc.j);
+							if (!Len(arguments.textField) && !IsNumeric(arguments.options[ListGetAt(loc.columns, loc.j)][loc.i]))
+								arguments.textField = ListGetAt(loc.columns, loc.j);
+						}
 					}
-					if (StructKeyExists(loc.object, arguments.textField))
+					if (!Len(arguments.valueField) || !Len(arguments.textField))
 					{
-						loc.optionText = loc.object[arguments.textField];
+						// the query does not contain both a numeric and a text column so we'll just use the first and second column instead
+						arguments.valueField = ListGetAt(loc.columns, 1);
+						arguments.textField = ListGetAt(loc.columns, 2);
 					}
 				}
 			}
-			ArrayAppend(loc.returnValue, $option(objectValue=loc.value, optionValue=loc.optionValue, optionText=loc.optionText));
-		}
-	</cfscript>
-	<cfreturn ArrayToList(loc.returnValue, "")>
-</cffunction>
-
-<cffunction name="$optionsForSelectConvertStruct" returntype="array" access="public" output="false"
-			hint="converts the struct to array of arrays">
-	<cfargument name="options" type="any" required="true">
-	<cfargument name="valueField" type="string" required="true">
-	<cfargument name="textField" type="string" required="true">
-	<cfscript>
-		var loc = {};
-		loc.returnValue = [];
-		loc.sortedKeys = ListSort(StructKeyList(arguments.options), "textnocase"); // sort struct keys alphabetically
-		loc.iEnd = ListLen(loc.sortedKeys);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-		{
-			loc.key = ListGetAt(loc.sortedKeys, loc.i);
-			loc.returnValue[loc.i] = [LCase(loc.key), arguments.options[loc.key]];
-		}
-	</cfscript>
-	<cfreturn loc.returnValue>
-</cffunction>
-
-<cffunction name="$optionsForSelectConvertQuery" returntype="array" access="public" output="false"
-			hint="converts the query to array of arrays">
-	<cfargument name="options" type="any" required="true">
-	<cfargument name="valueField" type="string" required="true">
-	<cfargument name="textField" type="string" required="true">
-	<cfscript>
-		var loc = {};
-		loc.returnValue = [];
-		if (!Len(arguments.valueField) || !Len(arguments.textField))
-		{
-			// order the columns according to their ordinal position in the database table
-			loc.info = GetMetaData(arguments.options);
-			loc.iEnd = ArrayLen(loc.info);
-			loc.columns = "";
+			loc.iEnd = arguments.options.RecordCount;
 			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 			{
-				loc.columns = ListAppend(loc.columns, loc.info[loc.i].name);
+				loc.returnValue = loc.returnValue & $option(objectValue=loc.value, optionValue=arguments.options[arguments.valueField][loc.i], optionText=arguments.options[arguments.textField][loc.i]);
 			}
-			if (!Len(loc.columns))
+		}
+		else if (IsStruct(arguments.options))
+		{
+			loc.sortedKeys = ListSort(StructKeyList(arguments.options), "textnocase"); // sort struct keys alphabetically
+			loc.iEnd = ListLen(loc.sortedKeys);
+			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 			{
-				arguments.valueField = "";
-				arguments.textField = "";
+				loc.key = ListGetAt(loc.sortedKeys, loc.i);
+				loc.returnValue = loc.returnValue & $option(objectValue=loc.value, optionValue=LCase(loc.key), optionText=arguments.options[loc.key]);
 			}
-			else if (ListLen(loc.columns) == 1)
+		}
+		else
+		{
+			// convert the options to an array so we don't duplicate logic
+			if (IsSimpleValue(arguments.options))
+				arguments.options = ListToArray(arguments.options);
+
+			// loop through the array
+			loc.iEnd = ArrayLen(arguments.options);
+			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 			{
-				arguments.valueField = ListGetAt(loc.columns, 1);
-				arguments.textField = ListGetAt(loc.columns, 1);
-			}
-			else
-			{
-				// take the first numeric field in the query as the value field and the first non numeric as the text field
-				loc.iEnd = arguments.options.RecordCount;
-				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+				loc.optionValue = "";
+				loc.optionText = "";
+				// see if the value in the array cell is an array, which means the programmer is using multidimensional arrays. if it is, use the first dimension for the key and the second for the value if it exists.
+				if (IsSimpleValue(arguments.options[loc.i]))
 				{
-					loc.jEnd = ListLen(loc.columns);
-					for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
+					loc.optionValue = arguments.options[loc.i];
+					loc.optionText = humanize(arguments.options[loc.i]);
+				}
+				else if (IsArray(arguments.options[loc.i]) && ArrayLen(arguments.options[loc.i]) >= 2)
+				{
+					loc.optionValue = arguments.options[loc.i][1];
+					loc.optionText = arguments.options[loc.i][2];
+				}
+				else if (IsStruct(arguments.options[loc.i]) && StructKeyExists(arguments.options[loc.i], "value") && StructKeyExists(arguments.options[loc.i], "text"))
+				{
+					loc.optionValue = arguments.options[loc.i]["value"];
+					loc.optionText = arguments.options[loc.i]["text"];
+				}
+				else if (IsObject(arguments.options[loc.i]))
+				{
+					loc.object = arguments.options[loc.i];
+					if (!Len(arguments.valueField) || !Len(arguments.textField))
 					{
-						if (!Len(arguments.valueField) && IsNumeric(arguments.options[ListGetAt(loc.columns, loc.j)][loc.i]))
+						loc.propertyNames = loc.object.propertyNames();
+						loc.jEnd = ListLen(loc.propertyNames);
+						for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
 						{
-							arguments.valueField = ListGetAt(loc.columns, loc.j);
+							loc.propertyName = ListGetAt(loc.propertyNames, loc.j);
+							if (StructKeyExists(loc.object, loc.propertyName))
+							{
+								loc.propertyValue = loc.object[loc.propertyName];
+								if (!Len(arguments.valueField) && IsNumeric(loc.propertyValue))
+									arguments.valueField = loc.propertyName;
+								if (!Len(arguments.textField) && !IsNumeric(loc.propertyValue))
+									arguments.textField = loc.propertyName;
+							}
 						}
-						if (!Len(arguments.textField) && !IsNumeric(arguments.options[ListGetAt(loc.columns, loc.j)][loc.i]))
+
+					}
+					if (StructKeyExists(loc.object, arguments.valueField))
+						loc.optionValue = loc.object[arguments.valueField];
+					if (StructKeyExists(loc.object, arguments.textField))
+						loc.optionText = loc.object[arguments.textField];
+				}
+				else if (IsStruct(arguments.options[loc.i]))
+				{
+					loc.object = arguments.options[loc.i];
+					// if the struct only has one elment then use the key/value pair
+					if(StructCount(loc.object) eq 1)
+					{
+						loc.key = StructKeyList(loc.object);
+						loc.optionValue = loc.object[loc.key];
+						loc.optionText = LCase(loc.key);
+					}
+					else
+					{
+						if (StructKeyExists(loc.object, arguments.valueField))
 						{
-							arguments.textField = ListGetAt(loc.columns, loc.j);
+							loc.optionValue = loc.object[arguments.valueField];
+						}
+						if (StructKeyExists(loc.object, arguments.textField))
+						{
+							loc.optionText = loc.object[arguments.textField];
 						}
 					}
 				}
-				if (!Len(arguments.valueField) || !Len(arguments.textField))
-				{
-					// the query does not contain both a numeric and a text column so we'll just use the first and second column instead
-					arguments.valueField = ListGetAt(loc.columns, 1);
-					arguments.textField = ListGetAt(loc.columns, 2);
-				}
+				loc.returnValue = loc.returnValue & $option(objectValue=loc.value, optionValue=loc.optionValue, optionText=loc.optionText);
 			}
-		}
-
-		loc.iEnd = arguments.options.RecordCount;
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-		{
-			loc.returnValue[loc.i] = [arguments.options[arguments.valueField][loc.i], arguments.options[arguments.textField][loc.i]];
 		}
 	</cfscript>
 	<cfreturn loc.returnValue>

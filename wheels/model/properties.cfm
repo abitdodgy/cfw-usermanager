@@ -200,7 +200,7 @@
 			}
 		}
 		if (!Len(loc.returnValue) && arguments.$returnTickCountWhenNew)
-			loc.returnValue = variables.wheels.instance.tickCountId;
+			loc.returnValue = variables.wheels.tickCountId;
 		</cfscript>
 	<cfreturn loc.returnValue>
 </cffunction>
@@ -340,9 +340,7 @@
 
 		// always return true if $persistedProperties does not exists
 		if (!StructKeyExists(variables, "$persistedProperties"))
-		{
 			return true;
-		}
 
 		if (!Len(arguments.property))
 		{
@@ -466,16 +464,12 @@
 	<cfargument name="filterList" type="string" required="false" default="" />
 	<cfargument name="setOnModel" type="boolean" required="false" default="true" />
 	<cfargument name="$useFilterLists" type="boolean" required="false" default="true" />
-	<cfargument name="callbacks" type="boolean" required="false" default="true" />
 	<cfscript>
 		var loc = {};
 
 		loc.allowedProperties = {};
 
 		arguments.filterList = ListAppend(arguments.filterList, "properties,filterList,setOnModel,$useFilterLists");
-		
-		if (arguments.setOnModel)
-			arguments.filterList = ListAppend(arguments.filterList, "callbacks");
 
 		// add eventual named arguments to properties struct (named arguments will take precedence)
 		for (loc.key in arguments)
@@ -492,7 +486,7 @@
 			if (loc.accessible)
 				loc.allowedProperties[loc.key] = arguments.properties[loc.key];
 			if (loc.accessible && arguments.setOnModel)
-				$setProperty(property=loc.key, value=loc.allowedProperties[loc.key], callbacks=arguments.callbacks);
+				$setProperty(property=loc.key, value=loc.allowedProperties[loc.key]);
 		}
 
 		if (arguments.setOnModel)
@@ -505,16 +499,15 @@
 	<cfargument name="property" type="string" required="true" />
 	<cfargument name="value" type="any" required="true" />
 	<cfargument name="associations" type="struct" required="false" default="#variables.wheels.class.associations#" />
-	<cfargument name="callbacks" type="boolean" required="false" default="true" />
 	<cfscript>
 		if (IsObject(arguments.value))
 			this[arguments.property] = arguments.value;
 		else if (IsStruct(arguments.value) && StructKeyExists(arguments.associations, arguments.property) && arguments.associations[arguments.property].nested.allow && ListFindNoCase("belongsTo,hasOne", arguments.associations[arguments.property].type))
-			$setOneToOneAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property], callbacks=arguments.callbacks);
+			$setOneToOneAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property]);
 		else if (IsStruct(arguments.value) && StructKeyExists(arguments.associations, arguments.property) && arguments.associations[arguments.property].nested.allow && arguments.associations[arguments.property].type == "hasMany")
-			$setCollectionAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property], callbacks=arguments.callbacks);
+			$setCollectionAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property]);
 		else if (IsArray(arguments.value) && ArrayLen(arguments.value) && !IsObject(arguments.value[1]) && StructKeyExists(arguments.associations, arguments.property) && arguments.associations[arguments.property].nested.allow && arguments.associations[arguments.property].type == "hasMany")
-			$setCollectionAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property], callbacks=arguments.callbacks);
+			$setCollectionAssociationProperty(property=arguments.property, value=arguments.value, association=arguments.associations[arguments.property]);
 		else
 			this[arguments.property] = arguments.value;
 	</cfscript>
@@ -557,13 +550,11 @@
 
 <cffunction name="$label" returntype="string" access="public" output="false">
 	<cfargument name="property" type="string" required="true">
-	<cfargument name="properties" type="struct" required="false" default="#variables.wheels.class.properties#">
-	<cfargument name="mapping" type="struct" required="false" default="#variables.wheels.class.mapping#">
 	<cfscript>
-		if (StructKeyExists(arguments.properties, arguments.property) && StructKeyExists(arguments.properties[arguments.property], "label"))
-			return arguments.properties[arguments.property].label;
-		else if (StructKeyExists(arguments.mapping, arguments.property) && StructKeyExists(arguments.mapping[arguments.property], "label"))
-			return arguments.mapping[arguments.property].label;
+		if (StructKeyExists(variables.wheels.class.properties, arguments.property) && StructKeyExists(variables.wheels.class.properties[arguments.property], "label"))
+			return variables.wheels.class.properties[arguments.property].label;
+		else if (StructKeyExists(variables.wheels.class.mapping, arguments.property) && StructKeyExists(variables.wheels.class.mapping[arguments.property], "label"))
+			return variables.wheels.class.mapping[arguments.property].label;
 		else
 			return Humanize(arguments.property);
 	</cfscript>

@@ -9,11 +9,10 @@
 	'
 	categories="view-helper,text" functions="excerpt,highlight,simpleFormat,titleize,truncate">
 	<cfargument name="text" type="string" required="true" hint="The text to create links in.">
-	<cfargument name="link" type="string" required="false" hint="Whether to link URLs, email addresses or both. Possible values are: `all` (default), `URLs` and `emailAddresses`.">
-	<cfargument name="relative" type="boolean" required="false" hint="Should we autolink relative urls">
+	<cfargument name="link" type="string" required="false" default="all" hint="Whether to link URLs, email addresses or both. Possible values are: `all` (default), `URLs` and `emailAddresses`.">
+	<cfargument name="relative" type="boolean" required="false" default="true" hint="Should we autolink relative urls">
 	<cfscript>
 		var loc = {};
-		$args(name="autoLink", args=arguments);
 		if (arguments.link != "emailAddresses")
 		{
 			if(arguments.relative)
@@ -76,75 +75,39 @@
 	categories="view-helper,text" functions="autoLink,highlight,simpleFormat,titleize,truncate">
 	<cfargument name="text" type="string" required="true" hint="The text to extract an excerpt from.">
 	<cfargument name="phrase" type="string" required="true" hint="The phrase to extract.">
-	<cfargument name="radius" type="numeric" required="false" hint="Number of characters to extract surrounding the phrase.">
-	<cfargument name="excerptString" type="string" required="false" hint="String to replace first and/or last characters with.">
-	<cfargument name="stripTags" type="boolean" required="false" hint="Should we remove all html tags before extracting the except">
-	<cfargument name="wholeWords" type="boolean" required="false" hint="when extracting the exceprt, span to to grab whole words.">
+	<cfargument name="radius" type="numeric" required="false" default="100" hint="Number of characters to extract surrounding the phrase.">
+	<cfargument name="excerptString" type="string" required="false" default="..." hint="String to replace first and/or last characters with.">
 	<cfscript>
 	var loc = {};
-	$args(name="excerpt", args=arguments);
-	// by default we return a blank string
-	loc.returnValue = "";
-	// strip all html tags from text
-	if (arguments.stripTags)
-	{
-		// have to append "this" since we have a method
-		// with the same name
-		arguments.text = this.stripTags(arguments.text);
-	}
-	// see if phrase exists in text
 	loc.pos = FindNoCase(arguments.phrase, arguments.text, 1);
-	// no need to go further if phrase isn't found
-	if (loc.pos eq 0)
+	if (loc.pos != 0)
 	{
-		return loc.returnValue;
-	}
-
-	loc.textLen = Len(arguments.text);
-	loc.phraseLen = Len(arguments.phrase);
-	loc.startPos = loc.pos - arguments.radius;
-	loc.truncateStart = arguments.excerptString;
-
-	if (loc.startPos <= 1)
-	{
-		loc.startPos = 1;
-		loc.truncateStart = "";
-	}
-
-	loc.endPos = loc.pos + loc.phraseLen + arguments.radius;
-	loc.truncateEnd = arguments.excerptString;
-
-	if (loc.endPos > loc.textLen)
-	{
-		// need to compensate for the fact that
-		// loc.startPos is at least 1
-		loc.endPos = loc.textLen + 1;
-		loc.truncateEnd = "";
-	}
-
-	if (arguments.wholeWords)
-	{
-		if (loc.startPos > 1)
+		if ((loc.pos-arguments.radius) <= 1)
 		{
-			loc._startPos = len(arguments.text) - loc.startPos;
-			loc.pad = loc._startPos - refind("[[:space:]]", reverse(arguments.text), loc._startPos);
-			loc.startPos = loc.startPos - loc.pad;
-
-			// when endPos gte textLen, need to subtract one to get
-			// the correct startPos
-			if (loc.endPos >= loc.textLen)
-			{
-				loc.startPos = loc.startPos - 1;
-			}
+			loc.startPos = 1;
+			loc.truncateStart = "";
 		}
-
-		if (loc.endPos < loc.textLen)
+		else
 		{
-			loc.endPos = refind("[[:space:]]", arguments.text, loc.endPos);
+			loc.startPos = loc.pos - arguments.radius;
+			loc.truncateStart = arguments.excerptString;
 		}
+		if ((loc.pos+Len(arguments.phrase)+arguments.radius) > Len(arguments.text))
+		{
+			loc.endPos = Len(arguments.text);
+			loc.truncateEnd = "";
+		}
+		else
+		{
+			loc.endPos = loc.pos + arguments.radius;
+			loc.truncateEnd = arguments.excerptString;
+		}
+		loc.returnValue = loc.truncateStart & Mid(arguments.text, loc.startPos, ((loc.endPos+Len(arguments.phrase))-(loc.startPos))) & loc.truncateEnd;
 	}
-
-	loc.returnValue = loc.truncateStart & Mid(arguments.text, loc.startPos, (loc.endPos - loc.startPos)) & loc.truncateEnd;
+	else
+	{
+		loc.returnValue = "";
+	}
 	</cfscript>
 	<cfreturn loc.returnValue>
 </cffunction>
@@ -158,10 +121,9 @@
 	categories="view-helper,text" functions="autoLink,excerpt,simpleFormat,titleize,truncate">
 	<cfargument name="text" type="string" required="true" hint="Text to search.">
 	<cfargument name="phrases" type="string" required="true" hint="List of phrases to highlight.">
-	<cfargument name="class" type="string" required="false" hint="Class to use in `span` tags surrounding highlighted phrase(s).">
+	<cfargument name="class" type="string" required="false" default="highlight" hint="Class to use in `span` tags surrounding highlighted phrase(s).">
 	<cfscript>
 		var loc = {};
-		$args(name="highlight", args=arguments);
 		if (!Len(arguments.text) || !Len(arguments.phrases))
 		{
 			loc.returnValue = arguments.text;
@@ -221,32 +183,23 @@
 	'
 	categories="view-helper,text" functions="autoLink,excerpt,highlight,titleize,truncate">
 	<cfargument name="text" type="string" required="true" hint="The text to format.">
-	<cfargument name="wrap" type="boolean" required="false" hint="Set to `true` to wrap the result in a paragraph.">
-	<cfargument name="escapeHtml" type="boolean" required="false" hint="Whether or not to escape HTML characters before applying the line break formatting.">
+	<cfargument name="wrap" type="boolean" required="false" default="true" hint="Set to `true` to wrap the result in a paragraph.">
 	<cfscript>
-		$args(name="simpleFormat", args=arguments);
-
-		// If we're escaping HTML along with applying the line break formatting
-		if(arguments.escapeHtml)
-		{
-			arguments.text = $htmlFormat(arguments.text);
-		}
-
-		arguments.text = Trim(arguments.text);
-
-		arguments.text = Replace(arguments.text, "#Chr(13)#", "", "all");
-		arguments.text = Replace(arguments.text, "#Chr(10)##Chr(10)#", "</p><p>", "all");
-		arguments.text = Replace(arguments.text, "#Chr(10)#", "<br />", "all");
-
+		var loc = {};
+		loc.returnValue = Trim(arguments.text);
+		loc.returnValue = Replace(loc.returnValue, "#Chr(13)#", "", "all");
+		loc.returnValue = Replace(loc.returnValue, "#Chr(10)##Chr(10)#", "</p><p>", "all");
+		loc.returnValue = Replace(loc.returnValue, "#Chr(10)#", "<br />", "all");
+		
 		// add back in our returns so we can strip the tags and re-apply them without issue
 		// this is good to be edited the textarea text in it's original format (line returns)
-		arguments.text = Replace(arguments.text, "</p><p>", "</p>#Chr(10)##Chr(10)#<p>", "all");
-		arguments.text = Replace(arguments.text, "<br />", "<br />#Chr(10)#", "all");
-
+		loc.returnValue = Replace(loc.returnValue, "</p><p>", "</p>#Chr(10)##Chr(10)#<p>", "all");
+		loc.returnValue = Replace(loc.returnValue, "<br />", "<br />#Chr(10)#", "all");
+		
 		if (arguments.wrap)
-			arguments.text = "<p>" & arguments.text & "</p>";
+			loc.returnValue = "<p>" & loc.returnValue & "</p>";
 	</cfscript>
-	<cfreturn arguments.text>
+	<cfreturn loc.returnValue>
 </cffunction>
 
 <cffunction name="titleize" returntype="string" access="public" output="false" hint="Capitalizes all words in the text to create a nicer looking title."
@@ -283,13 +236,14 @@
 	<cfargument name="length" type="numeric" required="false" hint="Length to truncate the text to.">
 	<cfargument name="truncateString" type="string" required="false" hint="String to replace the last characters with.">
 	<cfscript>
+		var loc = {};
 		$args(name="truncate", args=arguments);
 		if (Len(arguments.text) gt arguments.length)
-		{
-			arguments.text = Left(arguments.text, arguments.length-Len(arguments.truncateString)) & arguments.truncateString;
-		}
+			loc.returnValue = Left(arguments.text, arguments.length-Len(arguments.truncateString)) & arguments.truncateString;
+		else
+			loc.returnValue = arguments.text;
 	</cfscript>
-	<cfreturn arguments.text>
+	<cfreturn loc.returnValue>
 </cffunction>
 
 <cffunction name="wordTruncate" returntype="string" access="public" output="false" hint="Truncates text to the specified length of words and replaces the remaining characters with the specified truncate string (which defaults to ""..."")."
@@ -303,23 +257,24 @@
 	'
 	categories="view-helper,text" functions="autoLink,excerpt,highlight,simpleFormat,titleize">
 	<cfargument name="text" type="string" required="true" hint="The text to truncate.">
-	<cfargument name="length" type="numeric" required="false" hint="Number of words to truncate the text to.">
-	<cfargument name="truncateString" type="string" required="false" hint="String to replace the last characters with.">
+	<cfargument name="length" type="numeric" required="false" default="5" hint="Number of words to truncate the text to.">
+	<cfargument name="truncateString" type="string" required="false" default="..." hint="String to replace the last characters with.">
 	<cfscript>
 		var loc = {};
-		$args(name="wordTruncate", args=arguments);
+		loc.returnValue = "";
 		loc.wordArray = ListToArray(arguments.text, " ", false);
 		loc.wordLen = ArrayLen(loc.wordArray);
-
+		
 		if (loc.wordLen gt arguments.length)
 		{
-			arguments.text = "";
 			for (loc.i = 1; loc.i lte arguments.length; loc.i++)
-			{
-				arguments.text = ListAppend(arguments.text, loc.wordArray[loc.i], " ");
-			}
-			arguments.text = arguments.text & arguments.truncateString;
+				loc.returnValue = ListAppend(loc.returnValue, loc.wordArray[loc.i], " ");
+			loc.returnValue = loc.returnValue & arguments.truncateString;
+		}
+		else
+		{
+			loc.returnValue = arguments.text;
 		}
 	</cfscript>
-	<cfreturn arguments.text>
+	<cfreturn loc.returnValue>
 </cffunction>

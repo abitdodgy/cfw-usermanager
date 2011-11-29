@@ -3,16 +3,17 @@
 	<cfif flashKeyExists("message")>
 		<cfsavecontent variable="local.html">
 			<cfoutput>
-				<div class="row">
-					<div class="span16">
-						<div class="alert-message block-message #flash('messageType')# fade in" data-alert="alert">
-							<a href="##" class="close">&times;</a>
-							<p>#flash("message")#</p>
-						</div>
-					</div>
+				<div class="alert-message block-message #flash('messageType')# fade in" data-alert="alert">
+					<a href="##" class="close">&times;</a>
+					<p>#flash("message")#</p>
 				</div>
 			</cfoutput>
 		</cfsavecontent>
 	</cfif>
 	<cfreturn local.html>
+</cffunction>
+
+<cffunction name="formatDate" access="public" output="false" returnType="string" hint="Formats a date/time string.">
+	<cfargument name="string" type="date" required="true" hint="The date to format">
+	<cfreturn DateFormat(arguments.string, "medium")>
 </cffunction>

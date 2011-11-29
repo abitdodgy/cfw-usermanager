@@ -9,8 +9,6 @@
 			##styleSheetLinkTag("blog,comments")##
 			<!--- Includes printer style sheet --->
 			##styleSheetLinkTag(source="print", media="print")##
-			<!--- Includes external style sheet --->
-			##styleSheetLinkTag("http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/cupertino/jquery-ui.css")##
 		</head>
 		
 		<body>
@@ -19,7 +17,7 @@
 		</body>
 	'
 	categories="view-helper,assets" chapters="miscellaneous-helpers" functions="javaScriptIncludeTag,imageTag">
-	<cfargument name="sources" type="string" required="false" default="" hint="The name of one or many CSS files in the `stylesheets` folder, minus the `.css` extension. (Can also be called with the `source` argument.) Pass a full URL to generate a tag for an external style sheet.">
+	<cfargument name="sources" type="string" required="false" default="" hint="The name of one or many CSS files in the `stylesheets` folder, minus the `.css` extension. (Can also be called with the `source` argument.)">
 	<cfargument name="type" type="string" required="false" hint="The `type` attribute for the `link` tag.">
 	<cfargument name="media" type="string" required="false" hint="The `media` attribute for the `link` tag.">
 	<cfargument name="head" type="string" required="false" hint="Set to `true` to place the output in the `head` area of the HTML page instead of the default behavior, which is to place the output where the function is called from.">
@@ -65,8 +63,6 @@
 		    ##javaScriptIncludeTag("main")##
 			<!--- Includes `javascripts/blog.js` and `javascripts/accordion.js` --->
 			##javaScriptIncludeTag("blog,accordion")##
-			<!--- Includes external JavaScript file --->
-			##javaScriptIncludeTag("https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js")##
 		</head>
 		
 		<body>
@@ -75,7 +71,7 @@
 		</body>
 	'
 	categories="view-helper,assets" chapters="miscellaneous-helpers" functions="styleSheetLinkTag,imageTag">
-	<cfargument name="sources" type="string" required="false" default="" hint="The name of one or many JavaScript files in the `javascripts` folder, minus the `.js` extension. (Can also be called with the `source` argument.) Pass a full URL to access an external JavaScript file.">
+	<cfargument name="sources" type="string" required="false" default="" hint="The name of one or many JavaScript files in the `javascripts` folder, minus the `.js` extension. (Can also be called with the `source` argument.)">
 	<cfargument name="type" type="string" required="false" hint="The `type` attribute for the `script` tag.">
 	<cfargument name="head" type="string" required="false" hint="See documentation for @styleSheetLinkTag.">
 	<cfargument name="delim" type="string" required="false" default="," hint="the delimiter to use for the list of stylesheets">
@@ -135,7 +131,7 @@
 		}
 		if (application.wheels.cacheImages)
 		{
-			loc.category = "images";
+			loc.category = "image";
 			loc.key = $hashedKey(arguments);
 			loc.lockName = loc.category & loc.key;
 			loc.conditionArgs = {};

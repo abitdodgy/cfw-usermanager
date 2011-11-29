@@ -441,14 +441,16 @@
 				{
 					if (loc.thisValidation.method == "$validatesPresenceOf")
 					{
-						$validatesPresenceOf(argumentCollection=loc.thisValidation.args);
+						// if the property does not exist or if it's blank we add an error on the object (for all other validation types we call corresponding methods below instead)
+						if (!StructKeyExists(this, loc.thisValidation.args.property) or (IsSimpleValue(this[loc.thisValidation.args.property]) and !Len(Trim(this[loc.thisValidation.args.property]))) or (IsStruct(this[loc.thisValidation.args.property]) and !StructCount(this[loc.thisValidation.args.property])))
+							addError(property=loc.thisValidation.args.property, message=$validationErrorMessage(loc.thisValidation.args.property, loc.thisValidation.args.message));
 					}
 					else
 					{
 						// if the validation set does not allow blank values we can set an error right away, otherwise we call a method to run the actual check
-						if (StructKeyExists(loc.thisValidation.args, "property") && StructKeyExists(loc.thisValidation.args, "allowBlank") && !loc.thisValidation.args.allowBlank && (!StructKeyExists(this, loc.thisValidation.args.property) || (!Len(this[loc.thisValidation.args.property]) && loc.thisValidation.method != "$validatesUniquenessOf")))
-							addError(property=loc.thisValidation.args.property, message=$validationErrorMessage(argumentCollection=loc.thisValidation.args));
-						else if (!StructKeyExists(loc.thisValidation.args, "property") || (StructKeyExists(this, loc.thisValidation.args.property) &&(Len(this[loc.thisValidation.args.property]) || loc.thisValidation.method == "$validatesUniquenessOf")))
+						if (StructKeyExists(loc.thisValidation.args, "property") && StructKeyExists(loc.thisValidation.args, "allowBlank") && !loc.thisValidation.args.allowBlank && (!StructKeyExists(this, loc.thisValidation.args.property) || !Len(this[loc.thisValidation.args.property])))
+							addError(property=loc.thisValidation.args.property, message=$validationErrorMessage(loc.thisValidation.args.property, loc.thisValidation.args.message));
+						else if (!StructKeyExists(loc.thisValidation.args, "property") || (StructKeyExists(this, loc.thisValidation.args.property) && Len(this[loc.thisValidation.args.property])))
 							$invoke(method=loc.thisValidation.method, invokeArgs=loc.thisValidation.args);
 					}
 				}
@@ -589,7 +591,7 @@
 		// create the WHERE clause to be used in the query that checks if an identical value already exists
 		// wrap value in single quotes unless it's numeric
 		// example: "userName='Joe'"
-		ArrayAppend(loc.where, "#arguments.property#=#$adapter().$quoteValue(str=this[arguments.property], type=validationTypeForProperty(arguments.property))#");
+		ArrayAppend(loc.where, "#arguments.property#=#variables.wheels.class.adapter.$quoteValue(str=this[arguments.property], type=validationTypeForProperty(arguments.property))#");
 
 		// add scopes to the WHERE clause if passed in, this means that checks for other properties are done in the WHERE clause as well
 		// example: "userName='Joe'" becomes "userName='Joe' AND account=1" if scope is "account" for example
@@ -600,7 +602,7 @@
 			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 			{
 				loc.property = ListGetAt(arguments.scope, loc.i);
-				ArrayAppend(loc.where, "#loc.property#=#$adapter().$quoteValue(str=this[loc.property], type=validationTypeForProperty(loc.property))#");
+				ArrayAppend(loc.where, "#loc.property#=#variables.wheels.class.adapter.$quoteValue(str=this[loc.property], type=validationTypeForProperty(loc.property))#");
 			}
 		}
 

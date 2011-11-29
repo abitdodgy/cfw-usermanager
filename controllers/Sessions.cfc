@@ -1,68 +1,37 @@
-/*
- * @hint Sessions controller.
- */
 component
+	DisplayName="Sessions"
 	extends="Controller"
+	hint="The sessions controller."
 {
 	/*
 	 * @hint Constructor
 	 */
 	public void function init() {
-		filters(through="verifyLoginParams", only="login");
+		filters(through="checkLoginParams", only="login");
 	}
 
-	// --------------------------------------------------    
-    // Filters
+	// --------------------------------------------------
+	// Filters
 
 	/*
 	 * @hint Intercepts requests without valid params.
 	 */
-	private void function verifyLoginParams() {
+	private void function checkLoginParams() {
 		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
 			badLogin();
 		}
 	}
 
-	// --------------------------------------------------    
-    // Public
+	// --------------------------------------------------
+	// Public
 
 	/*
-	 * @hint Resets logs the user in based on a securty token and redirects them to the edit password form.
+	 * @hint Renders the index page
 	 */
-	public void function doPasswordReset() {
-		if ( StructKeyExists(params, "token") && Len(params.token) ) {
-			var token = model("token").findOneUnexpired(params.token);
-
-			if ( IsObject(token) ) {
-				var user = token.user();
-				user.generateTemporaryPassword();
-
-				if ( user.update() ) {
-					token.delete();
-					connect(user);
-					redirectTo(
-						controller="users",
-						action="edit",
-						params="slug=password",
-						message="<strong>Hi there!</strong> Please updated your password to continue.",
-						messageType="info"
-					);	
-				}
-			}
-		}
-
-		badLogin();
-	}
+	public void function index() {}
 
 	/*
-	 * @hint Renders the login page.
-	 */
-	public void function index() {
-		param name="params.email" type="string" default="";
-	}
-
-	/*
-	 * @hint Attempts to login a user.
+	 * @hint Logs-in a user
 	 */
 	public void function login() {
 		var user = model("user").findOneByEmail(value=params.email, include="role");
@@ -72,51 +41,109 @@ component
 		}
 		else {
 			connect(user);
-			redirectTo(controller="users", action="index");
+			redirect(user);
 		}
 	}
 
 	/*
-	 * @hint Attempts to log out a user.
+	 * @hint Logs-out a user
 	 */
 	public void function logout() {
 		disconnect();
-		redirectTo(route="home");
 	}
 
 	/*
-	 * @hint Renders the password reset page. If an email address is passed, looks it up and sends an email confirmation email.
+	 * @hint Renders the password reset page.
 	 */
 	public void function reset() {
 		if ( StructKeyExists(params, "email") ) {
 			var user = model("user").findOneByEmail(params.email);	
 
 			if ( IsObject(user) ) {
-				user.generateSecurityToken();
-	
+				user.generatePasswordToken();
+
+				/*
 				sendEmail(
-					from="admin@cfwusermanager.com",
+					from="password@myapp.com",
 					to=user.email,
 					subject="CFW User Manager Password Assistance",
 					template="templates/passwordReset",
 					recipientName=user.name,
-					resetURL="#URLFor(controller="sessions", action="doPasswordReset", onlyPath=false, params="token=#user.token.token#")#");
+					resetURL= URLFor(controller="sessions", action="doReset", onlyPath=false, params="token=#user.passwordToken.value#"));
+				*/
 			}
 
-			flashInsert(message="<strong>Great!</strong> Please check your e-mail for further insturctions.", messageType="info");
+			flashInsert(message="Please check your e-mail for further insturctions.", messageType="info");
 		}
 	}
 
-	// --------------------------------------------------    
-    // Private
+	/*
+	 * @hint Attempts to reset a user's password.
+	 */
+	public void function doReset() {
+		if ( StructKeyExists(params, "key") ) {
+			var token = model("tokenPassword").findOneUnexpired(params.key);
+
+			if ( IsObject(token) ) {
+				var user = token.user(include="role");
+				user.generateTemporaryPassword();
+
+				var temporaryPassword = user.password;
+
+				if ( user.update() ) {
+					token.delete();
+					connect(user);
+					flashInsert(message="Please updated your password to continue. Your temporary password is #temporaryPassword#", messageType="info");
+					redirect(user, "edit", "slug=password");
+				}
+			}
+		}
+
+		badLogin();
+	}
+
+	// --------------------------------------------------
+	// Private
 
 	/*
 	 * @hint Handles bad login attempts.
 	 */
 	private void function badLogin() {
-		param name="params.email" type="string" default="";   
-		flashInsert(message="<strong>Oh snap!</strong> We could not log you in. Please try that again.", messageType="error");
-		renderPage(action="index", params=params.email);
+		flashInsert(message="We could not log you in. Please try that again.", messageType="error");
+		renderPage(action="index");
+	}
+
+	/*
+	 * @hint Redirects the user to the appropriate area after login.
+	 */    
+	private void function redirect(required any user, string action="index", string params="") {
+		if ( StructKeyExists(session, "redirectParams") ) {
+			var args = StructCopy(session.redirectParams);
+			StructDelete(session, "redirectParams");
+		}
+		else {
+			var args = {
+				action = arguments.action,
+				params = arguments.params				
+			};
+
+			switch(arguments.user.role.name) {
+				case "Customer": {
+					args.controller = "customers";
+					break;
+				}
+				case "Admin": {
+					args.controller = "admin";
+					break;
+				}
+				default: {
+					disconnect();
+					redirectTo(route="home");			
+				}
+			}
+		}
+
+		redirectTo(argumentCollection=args);
 	}
 
 }

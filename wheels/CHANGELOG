@@ -1,47 +1,126 @@
-WHEELS VERSION 1.2 BETA 1 (r5386)
+WHEELS VERSION 1.1.6 (10/08/2011)
 
 Model Enhancements
 ==================
-* Fix to make sure the unique identifier in each new model object during a request is unique - [James Gibson]
-* Allow for self joining tables in associations - #293 [James Gibson]
-* Added "joinKey" on belongsTo(), hasOne() and hasMany() which allows you to specify a column to join to on the opposite side of the relationship from the "foreignKey" - [James Gibson]
+
+* validatesUniquenessOf only selects primary keys - [Jordan Clark, Don Humphreys]
 
 View Enhancements
 =================
-* Added a better way to escape all HTML entities - [James Gibson]
-* Ability to use custom types (HTML 5) on textField and textFieldTag form helpers - [Raul Riera]
-* Default to the humanized property name for labels on calculated or non-persistent properties instead of throwing an error - [Andy Bellenie]
-* Added escapeHTML argument on simpleFormat() - [Chris Peters]
-* Made it possible to set global defaults on autoLink(), excerpt(), highlight() and simpleFormat() - [Chris Peters]
-* Added support for array of structs for select() and selectTag() - #680 [William Fisk, Tony Petruzzi] 
 
-Controller Enhancements
-=======================
-* Speed improvement for finding routes when using a large amount of named routes - [James Gibson]
-* Wheels now compacts the output of the rendered content - [James Gibson]
-
-Other Enhancements
-==================
-* Added automatic caching in production mode of function results based on the arguments passed in - [Per Djurner]
-* Plugin functions can now be injected into base model adapter and model connection components - [Per Djurner]
-* Added support for Unobstructive Javascript - [Raul Riera]
-* Added proper HTTP status headers - #705 [cfconcepts, Andy Bellenie]
+* Allow removal height and/or width attributes from imageTag when set to false - [downtroden, Tony Petruzzi]
+* Allow delimiter to be specified for stylesheets and javascripts - [Derek, Tony Petruzzi]
 
 Bug Fixes
 =========
-* Allow blank values to be passed through to validation - #638 [Per Djurner]
-* Allow for encoding autodetection within provides - #674 [Raul Riera]
-* Transactions would not close when used with the dependent argument of hasMany() - #739 [Andy Bellenie]
-* Soft deletes now work correctly with outer joins - #762 [Andy Bellenie]
-* Pagination with compound keys - #725 [Andy Bellenie, jfeasel, Tony Petruzzi]
 
-Miscellaneous
-=============
-* Removed the "cacheDatabaseSchema" setting, "cacheModelInitialization" should now be used instead - [Per Djurner]
+* hasChanged was incorrectly evaluating boolean values - [Jordan Clark, Don Humphreys]
+* Do not perform update when no changes have been made to the properties of a model - #786 [Mohamad El-Husseini, Tony Petruzzi]
+* OnlyPath argument of urlFor does not correctly recognise HTTPS urls - [Andy Bellenie, Tony Petruzzi]
+* Pagination clause wasn't enclosed - [Karl Deterville, Tony Petruzzi]
+* Pagination endrow was incorrectly calculated - [Karl Deterville, Tony Petruzzi]
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-WHEELS VERSION 1.1.2
+WHEELS VERSION 1.1.5 (08/01/2011)
+
+View Enhancements
+=================
+
+* escape html entities in text and value of select options - #767 [Richard Herbert, Tony Petruzzi]
+
+Bug Fixes
+=========
+
+* Fix plugins not loading when application is in a subdirectory - [mcraig, Tony Petruzzi]
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+WHEELS VERSION 1.1.4 (07/20/2011)
+
+View Enhancements
+=================
+
+* Allow an array of structs to used for options in selectTag() - [Adam Chapman, Tony Petruzzi]
+* Added secondStep parameter to date/time select tags - [oxalto, Tony Petruzzi]
+
+Controller Enhancements
+=======================
+
+Model Enhancements
+==================
+
+* Update to belongsTo(), hasOne() and hasMany() for the new argument joinKey. - [James Gibson, Tony Petruzzi]
+* You can pass an unlimited number properties when using dynamic finders - [Tony Petruzzi]
+* Dynamic finders now support passing in an array for values - [Tony Petruzzi]
+* Added the delimiter argument to dynamic finders, this allow you to change the delimiter - [Tony Petruzzi]
+* Added validationTypeForProperty() method - [Tony Petruzzi]
+
+
+Other Enhancements
+==================
+
+* Added proper HTTP status headers - #705 [Randy Johnson , Andy Bellenie]
+* Plugin development no longer requires a zip file. - [Tony Petruzzi]
+
+Bug Fixes
+=========
+
+* Incorrect MIME type for JSON - #751 [daniel.mcq, Tony Petruzzi]
+* Route with format will cause exception when route is selected and format is not provided - #738 [Danny Beard, Tony Petruzzi]
+* Raise renderError when template is not found for format - #759 [Mike Henke, Tony Petruzzi]
+* LabelClass should split up the list of classes and attach one class for each label - #757 [Mohamad El-Husseini, Tony Petruzzi]
+* Transactions would not close when used with the dependent argument of hasMany() - #739 [Andy Bellenie]
+* Soft deletes do not work correctly with outer joins - #762 [Andy Bellenie]
+* Better error message when supplying a query param of type string and omitting single quotes - #763 [Adam Chapman, Tony Petruzzi]
+* Allow commas in dynamic finders - #771 [Joshua, Tony Petruzzi]
+* AMPM select displaying twice - #768 [John Bliss, Tony Petruzzi]
+* $request argumentsCollection: should be argumentCollection - #772 [William Fisk, Tony Petruzzi]
+* Pagination pull incorrect number of results with compounded keys - #725 [Jeff Greenhouse, Tony Petruzzi]
+* Update hasChanged() to properly chech floats - [Andy Bellenie, Tony Petruzzi]
+* Date tags selected date throws out of range error - [Ben Garrett, Tony Petruzzi]
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+WHEELS VERSION 1.1.3 (03/24/2011)
+
+View Enhancements
+=================
+* Allows for relative url linking to be turned off in autolink() - [James Gibson, Tony Petruzzi]
+
+Controller Enhancements
+=======================
+* Allow for default argument on sendmail for from, to and subject - #727 [Andy Bellenie, Tony Petruzzi]
+
+Model Enhancements
+==================
+* You can now have bracket markers for all validation arguments - #706 [Tony Petruzzi]
+* Columns marked as not null should allow for blank strings - [Tony Petruzzi]
+
+Bug Fixes
+=========
+* Fixed issue with $create supplying incorrect keys to $query - [Don Humphreys, Tony Petruzzi]
+* The original transaction mode would not be respected during during callbacks - [Andy Bellenie, Tony Petruzzi]
+* "none" transaction modes would never close - [Andy Bellenie, Tony Petruzzi]
+* Incorrect $cache argument - #671 [William Fisk, Tony Petruzzi]
+* Route formats prevented fullstops from being used in params - #666 [Tom King, Raul Riera, Tony Petruzzi]
+* Controller in params should be upper camel case - #703 [William Fisk, Tony Petruzzi]
+* Application scope would not initialize in sub - #721 [Adam Chapman, Tony Petruzzi]
+* ValidatesUniquenessOf doesn't read soft-deletes - #719 [Andy Bellenie, Tony Petruzzi]
+* PaginationLinks(): routes with page number marker variable would produce the wrong links - [Kenneth Barrett, Tony Petruzzi]
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+WHEELS VERSION 1.1.2 (01/29/2011)
+
+View Enhancements
+=================
+* Select, SelectTag allow an array of structs to be passed to options - #680 [William Fisk, Tony Petruzzi]
+
+Controller Enhancements
+=======================
+* Changed "default" argument on includeContent() to "defaultValue" - #663 [Tony Petruzzi]
 
 Model Enhancements
 ==================
@@ -51,7 +130,9 @@ Bug Fixes
 =========
 * Added the varchar_ignorecase type to the H2 adapter - #664 [Per Djurner]
 * Fix so that the full tablename is always retuned - #667 [Tony Petruzzi]
+* Pagaination with parameterize set to false for numeric keys - #656 [levi730, Tony Petruzzi]
 * Blank should be the selected value when includeBlank is set - #633 [Tony Petruzzi]
+* validatesLengthOf failed when both maximum and minimum were specified - [Tony Petruzzi]
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

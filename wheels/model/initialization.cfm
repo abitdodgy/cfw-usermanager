@@ -4,8 +4,8 @@
 	<cfscript>
 		var loc = {};
 		variables.wheels = {};
+		variables.wheels.errors = [];
 		variables.wheels.class = {};
-		variables.wheels.class.alias = arguments.name;
 		variables.wheels.class.modelName = arguments.name;
 		variables.wheels.class.modelId = hash(GetMetaData(this).name);
 		variables.wheels.class.path = arguments.path;
@@ -20,8 +20,6 @@
 		variables.wheels.class.RESQLAs = "[[:space:]]AS[[:space:]][A-Za-z1-9]+";
 		variables.wheels.class.RESQLOperators = "((?: (?:NOT )?LIKE)|(?: (?:NOT )?IN)|(?: IS(?: NOT)?)|(?:<>)|(?:<=)|(?:>=)|(?:!=)|(?:!<)|(?:!>)|=|<|>)";
 		variables.wheels.class.RESQLWhere = "(#variables.wheels.class.RESQLOperators# ?)(\('.+?'\)|\((-?[0-9\.],?)+\)|'.+?'()|''|(-?[0-9\.]+)()|NULL)(($|\)| (AND|OR)))";
-
-		variables.wheels.class.aliases = {};
 		variables.wheels.class.mapping = {};
 		variables.wheels.class.properties = {};
 		variables.wheels.class.accessibleProperties = {};
@@ -55,7 +53,7 @@
 		variables.wheels.class.adapter = $createObjectFromRoot(path="#application.wheels.wheelsComponentPath#", fileName="Connection", method="init", datasource="#variables.wheels.class.connection.datasource#", username="#variables.wheels.class.connection.username#", password="#variables.wheels.class.connection.password#");
 
 		// get columns for the table
-		loc.columns = $adapter().$getColumns(tableName());
+		loc.columns = variables.wheels.class.adapter.$getColumns(tableName());
 
 		variables.wheels.class.propertyList = "";
 		variables.wheels.class.columnList = "";
@@ -81,7 +79,7 @@
 				// set the info we need for each property
 				variables.wheels.class.properties[loc.property] = {};
 				variables.wheels.class.properties[loc.property].dataType = loc.type;
-				variables.wheels.class.properties[loc.property].type = $adapter().$getType(loc.type, loc.columns["decimal_digits"][loc.i]);
+				variables.wheels.class.properties[loc.property].type = variables.wheels.class.adapter.$getType(loc.type, loc.columns["decimal_digits"][loc.i]);
 				variables.wheels.class.properties[loc.property].column = loc.columns["column_name"][loc.i];
 				variables.wheels.class.properties[loc.property].scale = loc.columns["decimal_digits"][loc.i];
 
@@ -93,7 +91,7 @@
 
 				variables.wheels.class.properties[loc.property].size = loc.columns["column_size"][loc.i];
 				variables.wheels.class.properties[loc.property].label = Humanize(loc.property);
-				variables.wheels.class.properties[loc.property].validationtype = $adapter().$getValidationType(variables.wheels.class.properties[loc.property].type);
+				variables.wheels.class.properties[loc.property].validationtype = variables.wheels.class.adapter.$getValidationType(variables.wheels.class.properties[loc.property].type);
 
 				if (StructKeyExists(variables.wheels.class.mapping, loc.property)) {
 					if (StructKeyExists(variables.wheels.class.mapping[loc.property], "label"))
@@ -193,19 +191,14 @@
 	<cfargument name="row" type="numeric" required="false" default="1">
 	<cfargument name="base" type="boolean" required="false" default="true">
 	<cfargument name="useFilterLists" type="boolean" required="false" default="true">
-	<cfargument name="callbacks" type="boolean" required="false" default="true">
 	<cfscript>
 		var loc = {};
 
 		variables.wheels = {};
 		variables.wheels.instance = {};
-		variables.wheels.instance.errors = [];
+		variables.wheels.errors = [];
 		// keep a unique identifier for each model created in case we need it for nested properties
-		if (StructKeyExists(request.wheels, "tickCountId"))
-			request.wheels.tickCountId = PrecisionEvaluate(request.wheels.tickCountId + 1);
-		else
-			request.wheels.tickCountId = GetTickCount();
-		variables.wheels.instance.tickCountId = request.wheels.tickCountId.toString(); // make sure we have it in milliseconds
+		variables.wheels.tickCountId = GetTickCount().toString(); // make sure we have it in milliseconds
 
 		// copy class variables from the object in the application scope
 		if (!StructKeyExists(variables.wheels, "class"))
@@ -215,7 +208,7 @@
 			arguments.properties = $queryRowToStruct(argumentCollection=arguments);
 
 		if (IsStruct(arguments.properties) && !StructIsEmpty(arguments.properties))
-			$setProperties(properties=arguments.properties, setOnModel=true, $useFilterLists=arguments.useFilterLists, callbacks=arguments.callbacks);
+			$setProperties(properties=arguments.properties, setOnModel=true, $useFilterLists=arguments.useFilterLists);
 
 		if (arguments.persisted)
 			$updatePersistedProperties();
@@ -225,10 +218,6 @@
 
 <cffunction name="$classData" returntype="struct" access="public" output="false">
 	<cfreturn variables.wheels.class>
-</cffunction>
-
-<cffunction name="$adapter" returntype="any" access="public" output="false">
-	<cfreturn $classData().adapter>
 </cffunction>
 
 <cffunction name="$softDeletion" returntype="boolean" access="public" output="false">

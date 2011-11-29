@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<cfoutput>
-<html>
+<html><cfoutput>
+
 	<head>
 		<title>#includeContent("pageTitle")#</title>
 
-		#styleSheetLinkTag("bootstrap.min,default,prettify")#
-
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+		#styleSheetLinkTag("bootstrap.min,default")#
 		#javaScriptIncludeTag("bootstrap-alerts")#
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" type="text/javascript"></script>
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 	</head>
 
 	<body>
+		#includeContent()#
 
-		<!-- Header -->
+		<!-- Dock -->
 		<div class="topbar">
 			<div class="fill">
 				<div class="container">
@@ -21,21 +25,24 @@
 						<li><a>A ColdFusion on Wheels Demo App</a></li>
 					</ul>
 					<ul class="nav secondary-nav">
-						<li>#linkTo(text="Home", route="home")#</li>
 						<cfif isConnected()>
-							<li>#linkTo(text="My Profile", controller="users", action="index")#</li>
-							<li>#linkTo(text="Logout", controller="sessions", action="logout")#</li>
+							<li><a>Welcome, #session.currentUser.name#</a></li>
+							<li><a>|</a></li>
+							<cfif getConnectedUser("role") EQ "admin">
+								<li>#linkTo(text="Dashboard", controller="admin", action="index")#</li>
+							<cfelseif getConnectedUser("role") EQ "customer">
+								<li>#linkTo(text="Dashboard", controller="customers", action="index")#</li>
+							</cfif>
+							<li><a>|</a></li>
+							<li>#linkTo(text="Sign out", controller="sessions", action="logout")#</li>
 						<cfelse>
-							<li>#linkTo(text="Login", route="sessionsHome")#</li>
-							<li>#linkTo(text="Sign Up", controller="users", action="new")#</li>
+							<li>#linkTo(text="Sign Up", controller="customers", action="new")#</li>
+							<li>#linkTo(text="Sign in", controller="sessions", action="index")#</li>
 						</cfif>
 					</ul>
 				</div>
 			</div>
 		</div>
-		<!-- / Header -->
-
-		#includeContent()#
 	</body>
-</html>
-</cfoutput>
+
+</cfoutput></html>
