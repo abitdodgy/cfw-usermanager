@@ -30,12 +30,12 @@
 						</div>
 						<div class="actions">
 							#submitTag(value="Login", class="btn primary")#
-							#linkTo(text="Forgot your password?", action="reset")#
+							#linkTo(text="Forgot your password?", controller="resetPasswords", action="reset")#
 						</div>
 					</fieldset>
 				#endFormTag()#
 			</div>
-			
+
 			<div class="span7 offset1">
 				<h3>Trouble signing in?</h3>
 				<p>Please restart your browser. If that does not work, send an email to #mailTo(emailAddress="password@myapp.com", encode=true)#.</p>

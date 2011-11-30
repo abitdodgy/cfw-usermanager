@@ -11,7 +11,7 @@
 			id = arguments.user.id,
 			name = arguments.user.name,
 			role = arguments.user.role.name
-		};		
+		};
 	}
 
 	/*

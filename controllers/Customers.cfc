@@ -2,45 +2,33 @@ component
 	extends="Controller"
 	hint="The customers controller."
 {
-	/*
-	 * @hint Constructor
-	 */
+	/** @hint Constructor */
 	public void function init() {
-		filters(through="restrictAccess", except="new,create", userType="customer");
+		filters(through="restrictAccess", except="new,create", role="customer");
 		filters(through="getCustomer", except="new,create");
 	}
 
 	// --------------------------------------------------
 	// Filters
 
-	/*
-	 * @hint Returns the customer object
-	 */
+	/** @hint Returns the customer object. */
 	private void function getCustomer() {
 		customer = model("customer").findByKey(getConnectedUserId());
-		if ( ! IsObject(customer) ) {
-			disconnect();
-		}
+		if ( ! IsObject(customer) ) disconnect();
 	}
 
 	// --------------------------------------------------
 	// Public
 
-	/*
-	 * @hint Renders the index page
-	 */
+	/** @hint Renders the index page. */
 	public void function index() {}
 
-	/*
-	 * @hint Renders the new customer page
-	 */
+	/** @hint Renders the new customer page. */
 	public void function new() {
 		customer = model("customer").new();
 	}
 
-	/*
-	 * @hint Creates a new customer
-	 */
+	/** @hint Creates a new customer. */
 	public void function create() {
 		customer = model("customer").new(params.customer);
 		if ( customer.save() ) {
@@ -53,16 +41,12 @@ component
 		}
 	}
 
-	/*
-	 * @hint Renders the edit customer page
-	 */
+	/** @hint Renders the edit customer page. */
 	public void function edit() {
 		customer.passwordToBlank();
 	}
 
-	/*
-	 * @hint Updates a customer
-	 */
+	/** @hint Updates a customer. */
 	public void function update() {
 		if ( customer.update(name=params.customer.name) ) {
 			redirectTo(action="index", message="Your account details were updated successfully.", messageType="success");
@@ -73,10 +57,9 @@ component
 		}
 	}
 
-	/*
-	 * @hint Updates a customer's e-mail address.
-	 */
+	/** @hint Updates a customer's e-mail address. */
 	public void function updateEmail() {
+		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(action="edit");
@@ -93,7 +76,6 @@ component
 					recipientName=customer.name,
 					resetURL= URLFor(controller="customers", action="confirmEmail", onlyPath=false, params="token=#customer.emailToken.value#"));
 				*/
-
 				redirectTo(
 					action="index",
 					message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.",
@@ -105,9 +87,7 @@ component
 		}
 	}
 
-	/*
-	 * @hint Renders the confirmation page/confirms an email.
-	 */
+	/** @hint Confirms an email. */
 	public void function confirmEmail() {
 		if ( StructKeyExists(params, "key") ) {
 			var token = customer.findOneEmailToken(where="value = '#params.key#' AND expires > NOW()");
@@ -122,10 +102,9 @@ component
 		redirectTo(action="index");
 	}
 
-	/*
-	 * @hint Updates a customer's password.
-	 */
+	/** @hint Updates a customer's password. */
 	public void function updatePassword() {
+		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			customer.passwordToBlank();
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
@@ -143,15 +122,12 @@ component
 		}
 	}
 
-	/*
-	 * @hint Renders the delete account page.
-	 */
+	/** @hint Renders the delete account page. */
 	public void function delete() {}
 
-	/*
-	 * @hint Deletes a customer's account.
-	 */
+	/** @hint Deletes a customer's account. */
 	public void function doDelete() {
+		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(action="delete");

@@ -4,7 +4,7 @@ component
 {
 	/** @hint Constructor */
 	public void function init() {
-		filters(through="restrictAccess", userType="admin");
+		filters(through="restrictAccess", role="admin");
 	}
 
 	// --------------------------------------------------

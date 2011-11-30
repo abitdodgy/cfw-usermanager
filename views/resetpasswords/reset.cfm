@@ -8,11 +8,12 @@
 		</div>
 
 		<div class="row">
-			<div class="span8">
+			<div class="span10">
 				#flashMessageTag()#
 
-				<p>Please enter your e-mail address to continue. We will e-mail you instructions to reset your password.</p>
-				#startFormTag(action="reset")#
+				<p>Enter your e-mail address to receive instructions for reseting your password.</p>
+
+				#startFormTag(action="sendInstructions")#
 					<fieldset>
 						<div class="clearfix">
 							<label for="email">E-mail Address</label>

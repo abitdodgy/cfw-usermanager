@@ -11,9 +11,7 @@ component
 	// --------------------------------------------------
 	// Filters
 
-	/*
-	 * @hint Returns the admin object
-	 */
+	/** @hint Returns the admin object. */
 	private void function getAdmin() {
 		admin = model("admin").findByKey(getConnectedUserId());
 		if ( ! IsObject(admin) ) {
@@ -24,13 +22,13 @@ component
 	// --------------------------------------------------
 	// Public
 
-	/** @hint Renders the edit admin page */
+	/** @hint Renders the edit admin page. */
 	public void function edit() {
 		admin.passwordToBlank();
 		renderPage(template="/admin/adminSettings/edit");
 	}
 
-	/** @hint Updates the admin details */
+	/** @hint Updates the admin details. */
 	public void function update() {
 		if ( admin.update(name=params.admin.name) ) {
 			redirectTo(
@@ -45,8 +43,9 @@ component
 		}
 	}
 
-	/** @hint Updates the admin email */
+	/** @hint Updates the admin's email. */
 	public void function updateEmail() {
+		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! admin.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(template="/admin/adminSettings/edit");
@@ -63,7 +62,6 @@ component
 					recipientName=admin.name,
 					resetURL= URLFor(controller="admins", action="confirmEmail", onlyPath=false, params="token=#admin.emailToken.value#"));
 				*/
-
 				redirectTo(
 					controller="admin",
 					action="index",
@@ -76,9 +74,7 @@ component
 		}
 	}
 
-	/*
-	 * @hint Renders the confirmation page/confirms an email.
-	 */
+	/** @hint Confirms an email. */
 	public void function confirmEmail() {
 		if ( StructKeyExists(params, "key") ) {
 			var token = admin.findOneEmailToken(where="value = '#params.key#' AND expires > NOW()");
@@ -94,8 +90,9 @@ component
 	}
 
 
-	/** @hint Updates the admin password */
+	/** @hint Updates the admin's password. */
 	public void function updatePassword() {
+		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! admin.authenticate(params.currentPassword) ) {
 			admin.passwordToBlank();
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");

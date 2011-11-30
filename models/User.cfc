@@ -53,6 +53,7 @@
 
 	/*
 	 * @hint Initiates email verification process on e-mail update.
+	 * @note Reverts the email to its original value until the new address is verified.
 	 */
 	private void function setEmailVerificationOnUpdate() {
 		if ( ! this.isNew() && this.hasChanged("email") ) {
@@ -81,25 +82,11 @@
 	}
 
 	/**
-	 * @hint Generates a password reset token with an expiration date.
-	 */
-	public void function generatePasswordToken() {
-		this.passwordToken = this.passwordToken();
-		IsObject(this.passwordToken) ? this.passwordToken.update(generateTokenValue()) : this.createPasswordToken(generateTokenValue());
-	}
-
-	/**
-	 * @hint Generates a temporary password. We need to set the passwordConfirmation to trigger hashing.
-	 */
-	public void function generateTemporaryPassword() {
-		this.password = LCase(Left(CreateUUID(), 8));
-		this.passwordConfirmation = this.password;
-	}
-
-	/**
 	 * @hint Generates a token.
+	 * @pendingValue Holds a temporary value; an update email address that's pending verification, for example.
+	 * @validFor The number of days this token is valid for.
 	 */
-	public struct function generateTokenValue(string pendingValue="", numeric validFor=2) {
+	public struct function generateTokenValue(string pendingValue="", numeric validFor=1) {
 		var token = {
 			expires = DateAdd("d", arguments.validFor, Now()),
 			pendingValue = arguments.pendingValue,
