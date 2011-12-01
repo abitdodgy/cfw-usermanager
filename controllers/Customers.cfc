@@ -18,7 +18,9 @@ component
 	 */
 	private void function getCustomer() {
 		customer = model("customer").findByKey(getConnectedUserId());
-		if ( ! IsObject(customer) ) disconnect();
+		if ( ! IsObject(customer) ) {
+			disconnect();	
+		}
 	}
 
 	// --------------------------------------------------
@@ -79,23 +81,21 @@ component
 	 * @hint Updates a customer e-mail address.
 	 */
 	public void function updateEmail() {
-		// Require authentication
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(action="edit");
-			return;
-		}
-
-		if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
-				if ( StructKeyExists(customer, "token") ) {
-					// Todo: Email has changed and a token was added via callback; add sendEmail() method here. 	
-				}
-
-				redirectTo(action="index", message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.", messageType="info");
 		}
 		else {
-			flashInsert(message="We could not update your e-mail address. Please review the errors and try again.", messageType="error");
-			renderPage(action="edit");
+			if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
+				if ( StructKeyExists(customer, "token") ) {
+					// Todo: Email has changed and a token was added via a callback; add sendEmail() method here. 	
+				}
+				redirectTo(action="index", message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.", messageType="info");
+			}
+			else {
+				flashInsert(message="We could not update your e-mail address. Please review the errors and try again.", messageType="error");
+				renderPage(action="edit");
+			}			
 		}
 	}
 
@@ -108,16 +108,16 @@ component
 			customer.passwordToBlank();
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(action="edit");
-			return;
-		}
-
-		if ( customer.update(password=params.customer.password, passwordConfirmation=params.customer.passwordConfirmation) ) {
-			redirectTo(action="index", message="Your password was updated successfully.", messageType="success");
 		}
 		else {
-			customer.passwordToBlank();
-			flashInsert(message="We could not update your password. Please review the errors and try again.", messageType="error");
-			renderPage(action="edit");
+			if ( customer.update(password=params.customer.password, passwordConfirmation=params.customer.passwordConfirmation) ) {
+				redirectTo(action="index", message="Your password was updated successfully.", messageType="success");
+			}
+			else {
+				customer.passwordToBlank();
+				flashInsert(message="We could not update your password. Please review the errors and try again.", messageType="error");
+				renderPage(action="edit");
+			}
 		}
 	}
 
@@ -134,16 +134,16 @@ component
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
 			renderPage(action="delete");
-			return;
-		}
-
-		if ( customer.delete() ) {
-			flashInsert(message="Your account was deleted successfully.", messageType="success");
-			disconnect();
 		}
 		else {
-			flashInsert(message="We could not delete your account due to an internal error. Please try again.", messageType="error");
-			renderPage(action="delete");
+			if ( customer.delete() ) {
+				flashInsert(message="Your account was deleted successfully.", messageType="success");
+				disconnect();
+			}
+			else {
+				flashInsert(message="We could not delete your account due to an internal error. Please try again.", messageType="error");
+				renderPage(action="delete");
+			}
 		}
 	}
 
