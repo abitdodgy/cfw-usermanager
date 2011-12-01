@@ -27,7 +27,7 @@
 							<tr>
 								<td>admin@cfwdemo.com</td>
 								<td>demo2012</td>
-								<td>Customer</td>
+								<td>Admin</td>
 							</tr>
 							<tr>
 								<td>lisa@cfwdemo.com</td>

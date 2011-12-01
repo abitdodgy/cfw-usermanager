@@ -26,7 +26,7 @@
 	 * @hint Returns a named property from the current user session.
 	 */
 	public any function getConnectedUser(required string property) {
-		return session.currentUser[ arguments.property ];
+		return isConnected() ? session.currentUser[ arguments.property ] : false;
 	}
 
 	/*

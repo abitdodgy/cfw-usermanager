@@ -39,7 +39,7 @@ component
 
 			if ( ! user.isConfirmed ) {
 				if ( user.update(isConfirmed=1) ) {
-					token.deleteAllEmailTokens();
+					user.deleteAllEmailTokens();
 					redirectTo(controller="customers", action="index", message="Your e-mail address was verified successfully.", messageType="success");
 				}
 				else {
@@ -47,7 +47,7 @@ component
 				}
 			}
 			else {
-				token.delete();
+				user.deleteAllEmailTokens();
 				redirectTo(controller="customers", action="index", message="Your e-mail address was verified successfully.", messageType="success");
 			}
 		}
@@ -65,7 +65,7 @@ component
 			var token = user.createEmailToken(user.generateTokenValue(user.email, 2));
 		}
 
-		// Send email
+		// Insert sendEmail() method here.
 
 		flashInsert(message="Please check your e-mail for further instructions.", messageType="info");
 		renderPage(action="verifyEmail");

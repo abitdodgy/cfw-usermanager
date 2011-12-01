@@ -1,5 +1,4 @@
 component
-	displayname="Email Token"
 	extends="Token"
 	hint="Stores tokens related to email verification."
 {

@@ -1,5 +1,4 @@
 component
-	displayname="Password Token"
 	extends="Token"
 	hint="Stores tokens related to password reset requests."
 {
