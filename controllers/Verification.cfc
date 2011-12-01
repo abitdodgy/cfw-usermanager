@@ -38,7 +38,7 @@ component
 			user = token.user();
 
 			if ( ! user.isConfirmed ) {
-				if ( user.update(isConfirmed=1) ) {
+				if ( user.update(email=token.pendingValue, isConfirmed=1) ) {
 					user.deleteAllEmailTokens();
 					redirectTo(controller="customers", action="index", message="Your e-mail address was verified successfully.", messageType="success");
 				}

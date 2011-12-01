@@ -42,7 +42,10 @@ component
 	public void function create() {
 		customer = model("customer").new(params.customer);
 		if ( customer.save() ) {
+			var token = user.createEmailToken(user.generateTokenValue(user.email, 2));
+
 			// Todo: Insert sendEmail() method here
+
 			redirectTo(action="index", message="Your account was created successfully.", messageType="success");
 		}
 		else {
@@ -84,11 +87,11 @@ component
 		}
 
 		if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
-				// Todo: Insert sendEmail() method here
-				redirectTo(
-					action="index",
-					message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.",
-					messageType="info");
+				if ( StructKeyExists(customer, "token") ) {
+					// Todo: Email has changed and a token was added via callback; add sendEmail() method here. 	
+				}
+
+				redirectTo(action="index", message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.", messageType="info");
 		}
 		else {
 			flashInsert(message="We could not update your e-mail address. Please review the errors and try again.", messageType="error");

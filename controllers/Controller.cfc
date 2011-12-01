@@ -13,8 +13,7 @@ component
 			session.redirectParams = params;
 			redirectTo(controller="sessions", action="index");
 		}
-
-		if ( StructKeyExists(arguments, "role") ) {
+		else if ( StructKeyExists(arguments, "role") ) {
 			if ( ! arguments.role == getConnectedUser("role") ) disconnect();	
 		}
 	}
@@ -23,7 +22,7 @@ component
 	// Misc
 
 	/*
-	 * @hint Redirects the user after login.
+	 * @hint Redirects the user after login/logged in users.
 	 * @role Determines if user should be redirected to customer or admin dashboard.
 	 */
 	public void function redirectAfterLogin(string role=getConnectedUser("role")) {

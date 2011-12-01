@@ -41,7 +41,7 @@ component
 		if ( IsObject(user) ) {
 			user.createPasswordToken(user.generateTokenValue(validFor=1));
 
-			// Send email to user.
+			// Todo: add sendEmail() method here.
 		}
 
 		flashInsert(message="Please check your e-mail for further insturctions.", messageType="info");

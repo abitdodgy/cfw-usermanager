@@ -13,7 +13,7 @@ component
 	// Filters
 
 	/*
-	 * @hint Intercepts requests without valid params.
+	 * @hint Intercepts bad requests.
 	 */
 	private void function checkLoginParams() {
 		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
@@ -25,12 +25,12 @@ component
 	// Public
 
 	/*
-	 * @hint Renders the index page
+	 * @hint Renders the index page.
 	 */
 	public void function index() {}
 
 	/*
-	 * @hint Logs-in a user
+	 * @hint Logs-in a user.
 	 */
 	public void function login() {
 		var user = model("user").findOneByEmail(value=params.email, include="role");
@@ -45,7 +45,7 @@ component
 	}
 
 	/*
-	 * @hint Logs a user out
+	 * @hint Logs a user out.
 	 */
 	public void function logout() {
 		disconnect();

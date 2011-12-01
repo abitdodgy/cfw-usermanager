@@ -10,7 +10,7 @@
 		hasOne(name="passwordToken", modelName="tokenPassword", foreignKey="userId", dependent="delete");
 		hasMany(name="emailTokens", modelName="tokenEmail", foreignKey="userId", dependent="deleteAll");
 
-		afterSave("setSession,setEmailVerification");
+		afterSave("setSession");
 		beforeSave("sanitize,securePassword,setEmailVerificationOnUpdate");
 		beforeValidation("setSalt");
 
@@ -39,15 +39,6 @@
 	private void function securePassword() {
 		if ( StructKeyExists(this, "passwordConfirmation") ) {
 			this.password = hashPassword(this.password, this.salt);	
-		}
-	}
-
-	/*
-	 * @hint Initiates email verification process after registration is complete.
-	 */
-	private void function setEmailVerification() {
-		if ( this.isNew() ) {
-			this.emailToken = this.createEmailToken(generateTokenValue(this.email));
 		}
 	}
 
