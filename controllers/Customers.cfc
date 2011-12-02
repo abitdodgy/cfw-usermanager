@@ -44,9 +44,19 @@ component
 	public void function create() {
 		customer = model("customer").new(params.customer);
 		if ( customer.save() ) {
-			var token = user.createEmailToken(user.generateTokenValue(user.email, 2));
+			var token = customer.createEmailToken(customer.generateTokenValue(customer.email, 48));
 
-			// Todo: Insert sendEmail() method here
+			// Since email is not setup in the demo app, we will comment this function out. 
+			/*
+			sendMail(
+				to=token.pendingValue,
+				from="",
+				subject="Please verify your e-mail address",
+				template="/templates/newCustomerVerification",
+				recipientName=user.name,
+				verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=token.value)
+			);
+			*/
 
 			redirectTo(action="index", message="Your account was created successfully.", messageType="success");
 		}

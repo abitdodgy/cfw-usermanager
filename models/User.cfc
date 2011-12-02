@@ -8,7 +8,7 @@
 	public void function init() {
 		belongsTo("role");
 		hasOne(name="passwordToken", modelName="tokenPassword", foreignKey="userId", dependent="delete");
-		hasMany(name="emailTokens", modelName="tokenEmail", foreignKey="userId", dependent="deleteAll");
+		hasOne(name="emailToken", modelName="tokenEmail", foreignKey="userId", dependent="delete");
 
 		afterSave("setSession");
 		beforeSave("sanitize,securePassword,setEmailVerificationOnUpdate");
@@ -48,8 +48,15 @@
 	 */
 	private void function setEmailVerificationOnUpdate() {
 		if ( ! this.isNew() && this.hasChanged("email") ) {
-			this.emailToken = this.createEmailToken(generateTokenValue(this.email));
-			this.email = this.changedFrom("email");
+			this.emailToken = this.emailToken();
+			
+			if ( IsObject(this.emailToken) ) {
+				this.emailToken = this.emailToken.update(generateTokenValue(this.email));
+			}
+			else {
+				this.emailToken = this.createEmailToken(generateTokenValue(this.email));
+				this.email = this.changedFrom("email");				
+			}
 		}
 	}
 
@@ -75,15 +82,14 @@
 	/**
 	 * @hint Generates a token.
 	 * @pendingValue Holds a temporary value; an update email address that's pending verification, for example.
-	 * @validFor The number of days this token is valid for.
+	 * @validForInHours The number of days this token is valid for.
 	 */
-	public struct function generateTokenValue(string pendingValue="", numeric validFor=1) {
+	public struct function generateTokenValue(string pendingValue="", numeric validForInHours=24) {
 		var token = {
-			expires = DateAdd("d", arguments.validFor, Now()),
+			expires = DateAdd("h", arguments.validForInHours, Now()),
 			pendingValue = arguments.pendingValue,
 			value = Rereplace(CreateUUID(), "-", "", "all")
 		};
-
 		return token;
 	}
 

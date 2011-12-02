@@ -1,6 +1,6 @@
 component
 	extends="Controller"
-	hint="The sessions controller."
+	hint="The sessions controller handles user authentication."
 {
 	/*
 	 * @hint Constructor
@@ -13,7 +13,7 @@ component
 	// Filters
 
 	/*
-	 * @hint Intercepts bad requests.
+	 * @hint Intercepts any request to authenticate that does not have a valid email address and a password.
 	 */
 	private void function checkLoginParams() {
 		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
