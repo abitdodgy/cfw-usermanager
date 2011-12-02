@@ -53,7 +53,7 @@ component
 				from="",
 				subject="Please verify your e-mail address",
 				template="/templates/newCustomerVerification",
-				recipientName=user.name,
+				recipientName=customer.name,
 				verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=token.value)
 			);
 			*/
@@ -98,7 +98,18 @@ component
 		else {
 			if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
 				if ( StructKeyExists(customer, "token") ) {
-					// Todo: Email has changed and a token was added via a callback; add sendEmail() method here. 	
+					// If a token is present, it means the email was changed and the callback to create a token was fired.
+					//Since email is not setup in the demo app, we will comment this function out. 
+					/*
+					sendMail(
+						to=customer.token.pendingValue,
+						from="",
+						subject="Please verify your e-mail address",
+						template="/templates/emailVerification",
+						recipientName=customer.name,
+						verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=customer.token.value)
+					);
+					*/ 	
 				}
 				redirectTo(action="index", message="<strong>Important:</strong> For your own security, your new e-mail address must be verified before any changes take effect. We sent you a verification e-mail to your new address.", messageType="info");
 			}
