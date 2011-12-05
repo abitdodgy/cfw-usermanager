@@ -89,7 +89,8 @@ component
 				redirectAfterLogin(message="Your password was reset successfully.", messageType="success");
 			}
 			else {
-				token.user.passwordToBlank();
+				user = token.user;
+				user.passwordToBlank();
 				flashInsert(message="We could not save your new password. Please fix the following errors and try again.", messageType="error");
 				renderPage(action="doReset");
 			}
