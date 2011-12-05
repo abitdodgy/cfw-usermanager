@@ -1,5 +1,3 @@
-<cfparam name="params.slug" default="">
-
 <cfoutput>
 
 	#contentFor(pageTitle="Edit Account")#
@@ -12,17 +10,22 @@
 		<div class="row">
 			<div class="span16">
 				#flashMessageTag()#
-				<cfswitch expression="#params.slug#">
-					<cfcase value="details">
-						#includePartial("forms/details")#
-					</cfcase>
-					<cfcase value="email">
-						#includePartial("forms/email")#
-					</cfcase>
-					<cfcase value="password">
-						#includePartial("forms/password")#
-					</cfcase>
-				</cfswitch>
+
+				#startFormTag(action="update")#
+					<fieldset>
+						<div class="clearfix">
+							<label for="customer-name">Name</label>
+							<div class="input">
+								#textField(objectName="customer", property="name", label=false)#
+								#errorMessageOn(objectName="customer", property="name")#
+							</div>
+						</div>
+						<div class="actions">
+							#submitTag(value="Save", class="btn primary")#
+							#linkTo(text="Cancel", action="index", class="btn")#
+						</div>
+					</fieldset>
+				#endFormTag()#				
 			</div>
 		</div>
 	</div>

@@ -14,9 +14,9 @@
 				<div class="well">
 					<h3>Edit Account</h3>
 					<ul>
-						<li>#linkTo(text="Edit Name", action="edit", params="slug=details")#</li>
-						<li>#linkTo(text="Edit E-mail", action="edit", params="slug=email")#</li>
-						<li>#linkTo(text="Edit Password", action="edit", params="slug=password")#</li>
+						<li>#linkTo(text="Edit Name", action="edit")#</li>
+						<li>#linkTo(text="Edit E-mail", action="editEmail")#</li>
+						<li>#linkTo(text="Edit Password", action="editPassword")#</li>
 						<li>#linkTo(text="Delete Account", action="delete")#</li>
 					</ul>
 				</div>

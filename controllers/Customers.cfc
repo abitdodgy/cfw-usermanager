@@ -73,6 +73,20 @@ component
 	}
 
 	/**
+	 * @hint Renders the edit e-mail page.
+	 */
+	public void function editEmail() {
+		customer.passwordToBlank();
+	}
+
+	/**
+	 * @hint Renders the edit password page.
+	 */
+	public void function editPassword() {
+		customer.passwordToBlank();
+	}
+
+	/**
 	 * @hint Updates a customer.
 	 */
 	public void function update() {
@@ -91,7 +105,7 @@ component
 	public void function updateEmail() {
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
-			renderPage(action="edit");
+			renderPage(action="editEmail");
 		}
 		else {
 			if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
@@ -113,7 +127,7 @@ component
 			}
 			else {
 				flashInsert(message="We could not update your e-mail address. Please review the errors and try again.", messageType="error");
-				renderPage(action="edit");
+				renderPage(action="editEmail");
 			}			
 		}
 	}
@@ -126,7 +140,7 @@ component
 		if ( ! StructKeyExists(params, "currentPassword") || ! customer.authenticate(params.currentPassword) ) {
 			customer.passwordToBlank();
 			flashInsert(message="The current password provided does not match the one we have on record.", messageType="error");
-			renderPage(action="edit");
+			renderPage(action="editPassword");
 		}
 		else {
 			if ( customer.update(password=params.customer.password, passwordConfirmation=params.customer.passwordConfirmation) ) {
@@ -135,7 +149,7 @@ component
 			else {
 				customer.passwordToBlank();
 				flashInsert(message="We could not update your password. Please review the errors and try again.", messageType="error");
-				renderPage(action="edit");
+				renderPage(action="editPassword");
 			}
 		}
 	}
