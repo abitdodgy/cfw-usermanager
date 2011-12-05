@@ -1,21 +1,13 @@
 ﻿component
-	DisplayName="Pages"
 	extends="Controller"
-	hint="Public website controller"
-{
-	/*
-	 * @hint Constructor
-	 */
-	public void function init() {
-	}
-	
+	hint="The Pages controller displays the public facing pages of the application."
+{	
 	// --------------------------------------------------
 	// Public
 
 	/*
-	 * @hint Renders the index page
+	 * @hint Renders the index page.
 	 */
-	public void function index() {
-	}
+	public void function index() {}
 
 }

@@ -6,7 +6,7 @@ component
 	 * @hint Constructor
 	 */
 	public void function init() {
-		filters(through="restrictAccess", role="customer");
+		filters(through="restrictAccess");
 		verifies(only="doVerifyEmail", params="key", paramsTypes="string", handler="intercept");
 	}
 
@@ -42,10 +42,7 @@ component
 		if ( IsObject(token) ) {
 			if ( token.user.update(email=token.pendingValue, isConfirmed=1, callbacks=false) ) {
 				token.delete();
-				redirectTo(controller="customers", action="index", message="Your e-mail address was verified successfully.", messageType="success");
-			}
-			else {
-				renderPage(action="verifyEmail");
+				redirectAfterLogin(message="Your e-mail address was verified successfully.", messageType="success");
 			}
 		}
 		renderPage(action="verifyEmail");

@@ -1,10 +1,8 @@
 /*
-Navicat MySQL Data Transfer
-
-Source Server         : Default
-Source Server Version : 50515
-Source Host           : localhost:3306
-Source Database       : cfw-user-manager-2
+Mohamad El-Husseini
+mohamad.im
+CFW User Manager Demo App
+https://github.com/abitdodgy/cfw-usermanager
 
 Target Server Type    : MYSQL
 Target Server Version : 50515
@@ -60,7 +58,7 @@ CREATE TABLE `users` (
   `name` varchar(40) NOT NULL,
   `email` varchar(40) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `salt` varchar(36) NOT NULL,
+  `salt` varchar(255) NOT NULL,
   `isconfirmed` enum('1','0') NOT NULL DEFAULT '0',
   `createdat` datetime DEFAULT NULL,
   `updatedat` datetime DEFAULT NULL,

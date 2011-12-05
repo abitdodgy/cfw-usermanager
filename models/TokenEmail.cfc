@@ -1,6 +1,6 @@
 component
 	extends="Token"
-	hint="Stores tokens related to email verification."
+	hint="The TokenEmail model stores tokens used for e-mail verification."
 {
 	/*
 	 * @hint Constructor

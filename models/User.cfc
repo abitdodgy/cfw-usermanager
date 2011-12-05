@@ -65,7 +65,7 @@
 	 */
 	private void function setSalt() {
 		if ( StructKeyExists(this, "passwordConfirmation") ) {
-			this.salt = CreateUUID();
+			this.salt = GenerateSecretKey("AES", 256);
 		}
 	}
 

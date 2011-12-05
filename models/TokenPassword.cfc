@@ -1,6 +1,6 @@
 component
 	extends="Token"
-	hint="Stores tokens related to password reset requests."
+	hint="The TokenPassword model stores tokens used for password reset requests."
 {
 	/*
 	 * @hint Constructor

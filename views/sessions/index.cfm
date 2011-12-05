@@ -28,6 +28,21 @@
 								#passwordFieldTag(name="password", label=false)#
 							</div>
 						</div>
+						<!---
+						<div class="clearfix">
+							<label for="rememberMe">&nbsp;</label>
+							<div class="input">
+								<ul class="inputs-list">
+									<li>
+										<label>
+											#checkBoxTag(name="rememberMe")#
+											<span>Keep me logged in for 30 days.</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+						--->
 						<div class="actions">
 							#submitTag(value="Login", class="btn primary")#
 							#linkTo(text="Forgot your password?", controller="resetPasswords", action="reset")#

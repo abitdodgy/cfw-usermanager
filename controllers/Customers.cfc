@@ -18,9 +18,7 @@ component
 	 */
 	private void function getCustomer() {
 		customer = model("customer").findByKey(getConnectedUserId());
-		if ( ! IsObject(customer) ) {
-			disconnect();	
-		}
+		if ( ! IsObject(customer) ) disconnect();
 	}
 
 	// --------------------------------------------------

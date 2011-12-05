@@ -86,7 +86,7 @@ component
 		if ( IsObject(token) ) {
 			if ( token.user.update(password=params.user.password, passwordConfirmation=params.user.passwordConfirmation) ) {
 				token.delete();
-				redirectAfterLogin();
+				redirectAfterLogin(message="Your password was reset successfully.", messageType="success");
 			}
 			else {
 				token.user.passwordToBlank();
