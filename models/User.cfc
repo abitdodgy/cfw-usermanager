@@ -55,8 +55,8 @@
 			}
 			else {
 				this.emailToken = this.createEmailToken(generateTokenValue(this.email));
-				this.email = this.changedFrom("email");				
 			}
+			this.email = this.changedFrom("email");
 		}
 	}
 

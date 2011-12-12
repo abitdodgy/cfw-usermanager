@@ -109,17 +109,17 @@ component
 		}
 		else {
 			if ( customer.update(email=params.customer.email, emailConfirmation=params.customer.emailConfirmation) ) {
-				if ( StructKeyExists(customer, "token") ) {
+				if ( StructKeyExists(customer, "emailToken") ) {
 					// If a token is present, it means the email was changed and the callback to create a token was fired.
 					//Since email is not setup in the demo app, we will comment this function out. 
 					/*
 					sendMail(
-						to=customer.token.pendingValue,
+						to=customer.emailToken.pendingValue,
 						from="",
 						subject="Please verify your e-mail address",
 						template="/templates/emailVerification",
 						recipientName=customer.name,
-						verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=customer.token.value)
+						verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=customer.emailToken.value)
 					);
 					*/ 	
 				}
