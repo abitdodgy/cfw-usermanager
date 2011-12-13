@@ -10,7 +10,6 @@
 		hasOne(name="passwordToken", modelName="tokenPassword", foreignKey="userId", dependent="delete");
 		hasOne(name="emailToken", modelName="tokenEmail", foreignKey="userId", dependent="delete");
 
-		afterSave("setSession");
 		beforeSave("sanitize,securePassword,setEmailVerificationOnUpdate");
 		beforeValidation("setSalt");
 
@@ -112,16 +111,6 @@
 			arguments.password = Hash(arguments.password & arguments.salt, "SHA-512");
 		}
 		return arguments.password;
-	}
-
-	/*
-	 * @hint Sets the user session.
-	 */
-	private void function setSession() {
-		if ( ! StructKeyExists(this, "role") ) {
-			this.role = this.role();
-		}
-		connect(this);
 	}
 
 }

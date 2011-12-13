@@ -10,7 +10,7 @@
 		session.currentUser = {
 			id = arguments.user.id,
 			name = arguments.user.name,
-			role = arguments.user.role.name
+			role = StructKeyExists(arguments.user, "role") ? arguments.user.role.name : user.role().name
 		};
 	}
 

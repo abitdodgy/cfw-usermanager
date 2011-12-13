@@ -43,7 +43,6 @@ component
 		customer = model("customer").new(params.customer);
 		if ( customer.save() ) {
 			var token = customer.createEmailToken(customer.generateTokenValue(customer.email, 48));
-
 			// Since email is not setup in the demo app, we will comment this function out. 
 			/*
 			sendMail(
@@ -55,7 +54,7 @@ component
 				verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=token.value)
 			);
 			*/
-
+			connect(user);
 			redirectTo(action="index", message="Your account was created successfully.", messageType="success");
 		}
 		else {
@@ -92,6 +91,7 @@ component
 	public void function update() {
 		if ( customer.update(name=params.customer.name) ) {
 			redirectTo(action="index", message="Your account details were updated successfully.", messageType="success");
+			connect(user);
 		}
 		else {
 			flashInsert(message="We could not update your account. Please review the errors and try again.", messageType="error");
