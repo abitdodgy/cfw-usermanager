@@ -51,7 +51,7 @@
 			this.emailToken = this.emailToken();
 			
 			if ( IsObject(this.emailToken) ) {
-				this.emailToken = this.emailToken.update(generateTokenValue(this.email));
+				this.emailToken.update(generateTokenValue(this.email));
 			}
 			else {
 				this.emailToken = this.createEmailToken(generateTokenValue(this.email));
