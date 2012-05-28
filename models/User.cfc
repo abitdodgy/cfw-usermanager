@@ -75,7 +75,7 @@
 	 * @hint Authenticates a user object.
 	 */
 	public boolean function authenticate(required string password) {
-		return ! Compare(this.password, hashPassword(arguments.password, this.salt));
+		return this.password == hashPassword(arguments.password, this.salt) ? true : false;
 	}
 
 	/**
