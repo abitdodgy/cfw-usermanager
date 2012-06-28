@@ -43,6 +43,7 @@ component
 		customer = model("customer").new(params.customer);
 		if ( customer.save() ) {
 			var token = customer.createEmailToken(customer.generateTokenValue(customer.email, 48));
+
 			// Since email is not setup in the demo app, we will comment this function out. 
 			/*
 			sendMail(
@@ -54,7 +55,8 @@ component
 				verificationURL=URLFor(action="doVerifyEmail", onlyPath=false, key=token.value)
 			);
 			*/
-			connect(user);
+
+			connect(customer);
 			redirectTo(action="index", message="Your account was created successfully.", messageType="success");
 		}
 		else {

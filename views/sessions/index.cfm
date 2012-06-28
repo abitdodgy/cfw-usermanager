@@ -45,7 +45,7 @@
 						--->
 						<div class="actions">
 							#submitTag(value="Login", class="btn primary")#
-							#linkTo(text="Forgot your password?", controller="resetPasswords", action="reset")#
+							#linkTo(text="Forgot your password?", controller="passwordResets", action="new")#
 						</div>
 					</fieldset>
 				#endFormTag()#

@@ -26,18 +26,12 @@
 						<li><a>A ColdFusion on Wheels Demo App</a></li>
 					</ul>
 					<ul class="nav secondary-nav">
-						<cfif isConnected()>
-							<li><a>Welcome, #session.currentUser.name#</a></li>
-							<li><a>|</a></li>
-							<cfif getConnectedUser("role") EQ "admin">
-								<li>#linkTo(text="Dashboard", controller="admin", action="index")#</li>
-							<cfelseif getConnectedUser("role") EQ "customer">
-								<li>#linkTo(text="Dashboard", controller="customers", action="index")#</li>
-							</cfif>
+						<cfif signedIn()>
+							<li><a>Welcome, #currentUser().name#</a></li>
 							<li><a>|</a></li>
 							<li>#linkTo(text="Sign out", controller="sessions", action="logout")#</li>
 						<cfelse>
-							<li>#linkTo(text="Sign Up", controller="customers", action="new")#</li>
+							<li>#linkTo(text="Sign Up", controller="users", action="new")#</li>
 							<li>#linkTo(text="Sign in", controller="sessions", action="index")#</li>
 						</cfif>
 					</ul>

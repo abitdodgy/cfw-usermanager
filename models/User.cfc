@@ -79,6 +79,15 @@
 	}
 
 	/**
+	 * @hint Creates a password reset token
+	 */
+	public void function createPasswordResetToken() {
+		this.passwordResetToken = URLEncodedFormat(GenerateSecretKey("AES", 256));
+		this.passwordResetAt = Now();
+		this.save();
+	}
+
+	/**
 	 * @hint Generates a token.
 	 * @pendingValue Holds a temporary value; an update email address that's pending verification, for example.
 	 * @validForInHours The number of days this token is valid for.
