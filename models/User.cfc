@@ -13,6 +13,7 @@
 		beforeSave("sanitize,securePassword,setEmailVerificationOnUpdate");
 		beforeValidation("setSalt");
 
+		property(name="role", sql="SELECT roles.name FROM roles WHERE roles.id = users.roleId");
 		property(name="isConfirmed", default="0");
 
 		validatesConfirmationOf("email,password");
