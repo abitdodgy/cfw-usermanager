@@ -1,6 +1,6 @@
 component
 	extends="Controller"
-	hint="The sessions controller handles user authentication."
+	hint="Handles user authentication."
 {
 	/*
 	 * @hint Constructor
@@ -22,44 +22,34 @@ component
 	}
 
 	// --------------------------------------------------
-	// Public
+	// REST
 
 	/*
-	 * @hint Renders the index page.
+	 * @hint Renders the login page.
 	 */
-	public void function index() {}
+	public void function new() {
+	}
 
 	/*
-	 * @hint Logs-in a user.
+	 * @hint Logs in the user.
 	 */
-	public void function login() {
+	public void function create() {
 		var user = model("user").findOneByEmail(value=params.email, include="role");
-
 		if ( ! IsObject(user) || ! user.authenticate(params.password) ) {
-			badLogin();
+			flashInsert(message="We could not log you in. Please try that again.", messageType="error");
+			renderPage(action="new");
 		}
 		else {
-			connect(user);
-			redirectAfterLogin();
+			signIn(user);
+			redirectTo(route="home");
 		}
 	}
 
 	/*
-	 * @hint Logs a user out.
+	 * @hint Logs out the user.
 	 */
-	public void function logout() {
-		disconnect();
+	public void function delete() {
+		signOut();
+		redirectTo(route="home");
 	}
-
-	// --------------------------------------------------
-	// Private
-
-	/*
-	 * @hint Handles bad login attempts.
-	 */
-	private void function badLogin() {
-		flashInsert(message="We could not log you in. Please try that again.", messageType="error");
-		renderPage(action="index");
-	}
-
 }

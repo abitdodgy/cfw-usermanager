@@ -22,17 +22,18 @@
 			<div class="fill">
 				<div class="container">
 					<ul class="nav">
-						<li>#linkTo(route="home", class="brand", text="CFW User Manager")#</li>
+						<li>#linkTo(route="home", class="brand", text="CFWheels User Manager")#</li>
 						<li><a>A ColdFusion on Wheels Demo App</a></li>
 					</ul>
 					<ul class="nav secondary-nav">
 						<cfif signedIn()>
-							<li><a>Welcome, #currentUser().name#</a></li>
+							<li><a>Logged in as: #currentUser.name#</a></li>
 							<li><a>|</a></li>
-							<li>#linkTo(text="Sign out", controller="sessions", action="logout")#</li>
+							<li>#linkTo(text="Profile", route="profile", key=currentUser.id)#</li>
+							<li>#linkTo(text="Sign out", route="signOut")#</li>
 						<cfelse>
-							<li>#linkTo(text="Sign Up", controller="users", action="new")#</li>
-							<li>#linkTo(text="Sign in", controller="sessions", action="index")#</li>
+							<li>#linkTo(text="Sign Up", route="signUp")#</li>
+							<li>#linkTo(text="Sign in", route="signIn")#</li>
 						</cfif>
 					</ul>
 				</div>

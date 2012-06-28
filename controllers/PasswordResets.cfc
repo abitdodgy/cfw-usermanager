@@ -1,24 +1,35 @@
-﻿component extends="Controller" {
+﻿component
+	extends="Controller"
+	hint="Handles password reset requests."
+{
+	/**
+	 * @hint Constructor.
+	 */
+	public void function init() {
+		filters(through="redirectIfLoggedIn"); 
+	}
 
-	// Constructor
-
-	 public void function init() {
-	 	filters(through="redirectIfLoggedIn"); 
-	 }
-
+	// --------------------------------------------------
 	// Filters
 
+	/**
+	 * @hint Redirects the user away if its logged in.
+	 */
 	private void function redirectIfLoggedIn() {
-		if ( signedIn() ) {
-			redirectTo(route="home");
-		}
+		if ( signedIn() ) redirectTo(route="home");
 	}
 
-	// REST Actions
+	// --------------------------------------------------
+	// REST
 
-	public void function new() {
-	}
+	/**
+	 * @hint Renders the reset form page.
+	 */
+	public void function new() {}
 
+	/**
+	 * @hint Creates a new reset token and sends a reset email.
+	 */
 	public void function create() {
 		user = model("user").findOneByEmail(params.email);
 		if ( isObject(user) ) {
@@ -30,6 +41,9 @@
 		renderPage(action="new");
 	}
 	
+	/**
+	 * @hint Renders the edit user page where users enter a new passwords.
+	 */
 	public void function edit() {
 		user = model("user").findOneByPasswordResetToken(params.key);
 		if ( isObject(user) ) {
@@ -42,6 +56,9 @@
 		}
 	}
 	
+	/**
+	 * @hint Renders the edit user page where users enter a new passwords.
+	 */
 	public void function update() {
 		user = model("user").findOneByPasswordResetToken(params.key);
 		if ( isObject(user) && user.update(params.user) ) {

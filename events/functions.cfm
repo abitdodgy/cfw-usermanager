@@ -36,7 +36,6 @@
 	 	if ( signedIn() ) {
 	 		StructDelete(session, "currentUser");
 	 	}
-	 	redirectTo(route="home");
 	 }
 
 	// --------------------------------------------------

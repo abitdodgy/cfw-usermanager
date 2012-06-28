@@ -1,6 +1,6 @@
 ﻿component
 	extends="Controller"
-	hint="The Pages controller displays the public facing pages of the application."
+	hint="Handles public facing pages of the application."
 {	
 	// --------------------------------------------------
 	// Public

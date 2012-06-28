@@ -4,13 +4,13 @@
 
 	<div class="container">
 		<div class="page-header">
-			<h1>Home Page</h1>
+			<h1>CFWheels User Manager</h1>
 		</div>
 		<div class="row">
 			<div class="span8">
 				#flashMessageTag()#
 				<p>This is the public facing home page of the demo app. Assuming you created the data source and the database using the provided SQL file, see the users table accross for usage details.</p>
-				<p>#linkTo(text="Login", controller="sessions", action="index", class="btn primary")# &nbsp; #linkTo(text="Sign Up", controller="customers", action="new", class="btn danger")#</p>
+				<p>#linkTo(text="Sign in", route="signIn", class="btn primary")# &nbsp; #linkTo(text="Sign Up", route="signUp", class="btn danger")#</p>
 			</div>
 			<div class="span8">
 				<div class="well">

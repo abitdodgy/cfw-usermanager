@@ -1,8 +1,24 @@
 component
 	extends="Wheels"
 {
+	/**
+	 * @hint Constructor
+	 */
+	public void function init() {
+		filters(through="getCurrentUser");
+	}
+
 	// --------------------------------------------------
 	// Filters
+
+	/**
+	 * @hint Loads the current user in session.
+	 */
+	private void function getCurrentUser() {
+		if ( signedIn() ) {
+			currentUser = currentUser();
+		}
+	}
 
 	/*
 	 * @hint Restricts access to unauthorized users.

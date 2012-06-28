@@ -14,6 +14,7 @@
 		beforeValidation("setSalt");
 
 		property(name="isConfirmed", default="0");
+		property(name="roleId", default="1");
 
 		validatesConfirmationOf("email,password");
 		validatesFormatOf(property="email", type="email");
