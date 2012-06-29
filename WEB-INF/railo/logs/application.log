@@ -321,3 +321,4 @@
 "ERROR","web-0","06/28/2012","13:33:03","","Component [models.User] has no acessible Member with name [ROLE]; enable [trigger data member] in admininistrator to also invoke getters and setters"
 "ERROR","web-0","06/28/2012","22:25:50","","variable [USER] doesn't exist"
 "ERROR","web-0","06/28/2012","22:48:29","","Page /plugins/SingleTableInheritance/SingleTableInheritance.cfc [C:\dev\websites\cfw-usermanager\plugins\SingleTableInheritance\SingleTableInheritance.cfc] not found"
+"ERROR","web-0","06/29/2012","07:46:21","","key [EMAIL] doesn't exist in struct (keys:action,controller,reload)"
