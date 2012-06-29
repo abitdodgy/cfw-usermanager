@@ -10,16 +10,6 @@
 	}
 
 	// --------------------------------------------------
-	// Filters
-
-	/**
-	 * @hint Redirects the user away if its logged in.
-	 */
-	private void function redirectIfLoggedIn() {
-		if ( signedIn() ) redirectTo(route="home");
-	}
-
-	// --------------------------------------------------
 	// REST
 
 	/**
@@ -34,7 +24,6 @@
 		user = model("user").findOneByEmail(params.email);
 		if ( isObject(user) ) {
 			user.createPasswordResetToken();
-			dump(var=URLFor(action="edit", onlyPath=false, key=user.passwordResetToken), abort=true);
 			//sendMail(to=user.email, subject="Password reset", template="/templates/passwordReset", user=user);
 		}
 		flashInsert(message="We've sent you an email with password reset instructions!", messageType="success");

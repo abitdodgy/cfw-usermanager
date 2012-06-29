@@ -31,4 +31,11 @@ component
 			redirectTo(route="home", message="Unauthorized!", messageType="error");
 		}
 	}
+	
+	/**
+	 * @hint Redirects the user away if its logged in.
+	 */
+	private void function redirectIfLoggedIn() {
+		if ( signedIn() ) redirectTo(controller="users", action="index");
+	}
 }

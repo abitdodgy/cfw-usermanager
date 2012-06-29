@@ -25,6 +25,13 @@
 	// --------------------------------------------------
 	// RESTful style actions
 
+	/**
+	 * @hint Renders the user list.
+	 */
+	public void function index() {
+		users = model("user").findAll();
+	}
+
 	/*
 	 * @hint Renders the profile page.
 	 */	

@@ -2,6 +2,13 @@ component
 	extends="Controller"
 	hint="Handles user authentication."
 {
+	/**
+	 * @hint Constructor.
+	 */
+	public void function init() {
+		filters(through="redirectIfLoggedIn", except="delete"); 
+	}
+
 	// --------------------------------------------------
 	// RESTful style actions
 
@@ -22,7 +29,7 @@ component
 		}
 		else {
 			signIn(user);
-			redirectTo(route="profile", key=user.id);
+			redirectTo(controller="users", action="index");
 		}
 	}
 
