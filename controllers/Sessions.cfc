@@ -2,27 +2,8 @@ component
 	extends="Controller"
 	hint="Handles user authentication."
 {
-	/*
-	 * @hint Constructor
-	 */
-	public void function init() {
-		filters(through="checkLoginParams", only="login");
-	}
-
 	// --------------------------------------------------
-	// Filters
-
-	/*
-	 * @hint Intercepts any request to authenticate that does not have a valid email address and a password.
-	 */
-	private void function checkLoginParams() {
-		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
-			badLogin();
-		}
-	}
-
-	// --------------------------------------------------
-	// REST
+	// RESTful style actions
 
 	/*
 	 * @hint Renders the login page.
@@ -34,14 +15,14 @@ component
 	 * @hint Logs in the user.
 	 */
 	public void function create() {
-		var user = model("user").findOneByEmail(value=params.email, include="role");
+		var user = model("user").findOneByEmail(params.email);
 		if ( ! IsObject(user) || ! user.authenticate(params.password) ) {
 			flashInsert(message="We could not log you in. Please try that again.", messageType="error");
 			renderPage(action="new");
 		}
 		else {
 			signIn(user);
-			redirectTo(route="home");
+			redirectTo(route="profile", key=user.id);
 		}
 	}
 

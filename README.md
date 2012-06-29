@@ -1,46 +1,51 @@
 COLDFUSION ON WHEELS USER MANAGER DEMO
 ======================================
 
-CFW User Manager is a demo app for ColdFusion one Wheels. It's meant to be a toolkit for kickstarting a project that requires session management, password reset, and user and management functionality.
+CFWheels User Manager is a demo app for ColdFusion one Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and user roles functionality.
 
 
-Current Version
----------------
+Current Version 2.0
+-------------------
 
 Current version includes the following functionality:
 
-* User registration with verification e-mail;
-* User authentication
-* Update functionality for user profile, email address, and password with verification;
-* Password hashing and salting on creation, update, and reset;
-* Confirmation e-mail is sent to confirm password reset requests;
-* Confirmation e-mail is sent to confirm e-mail update requests;
-* Expiring security token functionality for password/e-mail updates resets;
+* Registration;
+* Authentication;
+* CRUD functionality for User model;
+* Password hashing and salting;
+* Expiring password resets with confirmation e-mail;
 * Admin section for managing users.
+
+
+Change Log
+----------
+
+The following changes have been made in version 2.0:
+
+* New RESTful Sessions controller.
+* New RESTful password resets controller.
+* No longer using a separate table to store password reset tokens. Password reset tokens are now stored in their own column in the users table. The previous release complicated things needlessly.
 
 
 Coming Soon
 -----------
 
-I will add the following features in later versions.
-
-* Ability to force password update after reset. Currently users are redirect to the update form, but there's nothing stopping them from navigating away;
-* User role based security.
+* Friendly redirects.
 
 Usage
 -----
 
-Download and file and run the included SQL file to create the database.
+Download and run the included SQL file to create the database.
 
 You need to create the schema from the included SQL file. You will also need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment.
 
-**Requires ColdFusion 9+ or Railo 3+.**
+**Requires ColdFusion 9 or Railo 3+.**
 
 
 Versioning
 ----------
 
-I'm not really sure how, but I will try to maintain CFW User Manager under the Semantic Versioning guidelines as much as possible (once I've read them, that is).
+I will try to maintain CFW User Manager under the Semantic Versioning guidelines as much as possible (once I've read them, that is).
 
 Releases will be numbered with the follow format:
 

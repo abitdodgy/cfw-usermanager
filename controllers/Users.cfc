@@ -6,18 +6,11 @@
 	 */
 	public void function init() {
 		super.init();
-		filters(through="isSignedIn,isCurrentUser", only="edit,update,delete");
+		filters(through="isAuthorized,isCurrentUser", only="edit,update,delete");
 	}
 
 	// --------------------------------------------------
 	// Filters
-
-	/*
-	 * @hint Ensures user is authenticated.
-	 */
-	private void function isSignedIn() {
-		if ( ! signedIn() ) redirectTo(route="signIn");
-	}
 
 	/*
 	 * @hint Ensures it's the correct user.
@@ -30,7 +23,7 @@
 	}
 
 	// --------------------------------------------------
-	// REST
+	// RESTful style actions
 
 	/*
 	 * @hint Renders the profile page.
@@ -65,7 +58,9 @@
 	/*
 	 * @hint Renders the edit user page.
 	 */
-	public void function edit() {}
+	public void function edit() {
+		user.passwordToBlank();
+	}
 
 	/*
 	 * @hint Updates the user.
@@ -75,6 +70,7 @@
 			redirectTo(route="profile", key=user.id, message="Profile updated successfully.", messageType="success");
 		}
 		else {
+			user.passwordToBlank();
 			flashInsert(message="We could not update your profile.", messageType="error");
 			renderPage(action="edit");
 		}
