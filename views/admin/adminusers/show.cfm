@@ -9,11 +9,11 @@
 			<div class="span12">
 				#flashMessageTag()#
 				<h3>#user.name#</h3>
-				<p>This is #user.name#'s page.</p>
+				<p>Joined on #DateFormat(user.createdAt, "medium")#.</p>
 				<p>#linkTo(text="&larr; Back", action="index")#</p>
 			</div>
 			<div class="span4 ar">
-				<p>#linkTo(text="Delete User", action="delete", key=user.id, class="btn danger")#</p>
+				<p>#linkTo(text="Delete User", action="delete", key=user.id, class="btn danger", confirm="Are you sure you want to delete this user?")#</p>
 			</div>
 		</div>
 	</div>

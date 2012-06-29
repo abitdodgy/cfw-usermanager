@@ -4,8 +4,8 @@ ColdFusion on Wheels User Manager Demo
 User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
 
 
-Current Version 2.0
--------------------
+Current Version 2.1.0
+---------------------
 
 Current version includes the following functionality:
 
@@ -15,7 +15,7 @@ Current version includes the following functionality:
 * Password hashing and salting;
 * Expiring password resets with confirmation e-mail;
 * Admin authorization;
-* Admin CRUD for managing users (work in progress).
+* Admin CRUD for managing users.
 
 
 Change Log
@@ -29,6 +29,7 @@ The following changes have been made in version 2.0:
 * Removed account verification. Will add this at a later stage.
 * Change database schema: dropped the tokens and roles tables.
 * Massive refactoring.
+* Changed schema again. The role is not a boolean column in the users table. This means refactoring authorization and authentication, and rereating the schema. SQL file has been included.
 
 Coming Soon
 -----------
@@ -39,11 +40,12 @@ Coming Soon
 Usage
 -----
 
+1. Create the database using the included SQL file.
+2. Create the datasource.
+
 Note that this version uses a new schema. The old schema is no longer compatible with this version.
 
-Download and run the included SQL file to create the database.
-
-You will also need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment.
+You need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment (password update verification).
 
 **Requires ColdFusion 9 or Railo 3+.**
 

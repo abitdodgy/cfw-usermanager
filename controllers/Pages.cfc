@@ -8,6 +8,8 @@
 	/*
 	 * @hint Renders the index page.
 	 */
-	public void function index() {}
+	public void function index() {
+		users = model("user").findAll();
+	}
 
 }

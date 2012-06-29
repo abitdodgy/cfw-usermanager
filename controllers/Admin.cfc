@@ -7,7 +7,19 @@ component
 	 */
 	public void function init() {
 		super.init();
-		filters(through="isAuthorized", role="admin");
+		filters(through="isAuthenticated,isAdmin");
+	}
+
+	// --------------------------------------------------
+	// Filters
+
+	/*
+	 * @hint Ensures user is an admin.
+	 */
+	private void function isAdmin() {
+		if ( ! currentUser.admin ) {
+			redirectTo(route="home", message="Unathorized!", messageType="error");	
+		}
 	}
 
 	// --------------------------------------------------

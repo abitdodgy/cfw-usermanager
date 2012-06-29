@@ -13,7 +13,7 @@
 			<div class="span16">
 				#flashMessageTag()#
 
-				#startFormTag(action="delete")#
+				#startFormTag(action="deleteByCheckBox")#
 					#linkTo(text="&larr; Back", controller="admin", action="index")# #submitTag(value="Delete Selected", class="btn pull-right", onClick="return confirm('Are you sure you want to delete the selected users?');")#
 					<cfif users.recordCount>
 						<table class="zebra-striped">
