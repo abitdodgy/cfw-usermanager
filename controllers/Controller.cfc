@@ -23,12 +23,9 @@ component
 	/*
 	 * @hint Ensures user is authenticated.
 	 */
-	private void function isAuthorized(string role) {
+	private void function isAuthenticated() {
 		if ( ! signedIn() ) {
 			redirectTo(route="signIn");	
-		}
-		else if ( StructKeyExists(arguments, "role") && currentUser.role != arguments.role) {
-			redirectTo(route="home", message="Unauthorized!", messageType="error");
 		}
 	}
 	

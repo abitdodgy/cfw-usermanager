@@ -6,7 +6,8 @@
 	 */
 	public void function init() {
 		super.init();
-		filters(through="isAuthorized,isCurrentUser", only="edit,update,delete");
+		filters(through="isAuthenticated,isAuthorized", only="edit,update,delete");
+		filters(through="protectFromMassAssignment", ony="create,update");
 	}
 
 	// --------------------------------------------------
@@ -15,10 +16,19 @@
 	/*
 	 * @hint Ensures it's the correct user.
 	 */
-	private void function isCurrentUser() {
+	private void function isAuthorized() {
 		user = model("user").findByKey(params.key);
-		if ( ! IsObject(user) || ! user.id == currentUser.id ) {
+		if ( (! IsObject(user)) || (! user.id == currentUser.id && ! user.admin) ) {
 			redirectTo(route="home");
+		}
+	}
+
+	/*
+	 * @hint Ensures the admin setting is set to 0 in case a user tries to exploit mass assignment.
+	 */
+	private void function protectFromMassAssignment() {
+		if ( StructKeyExists(params, "user") ) {
+			params.user.admin = 0;
 		}
 	}
 
