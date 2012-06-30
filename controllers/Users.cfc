@@ -28,9 +28,7 @@
 	 */
 	private void function protectFromMassAssignment() {
 		if ( StructKeyExists(params, "user") ) {
-			if ( ! signedIn() ) {
-				params.user.admin = 0;	
-			}
+			params.user.admin = 0;	
 		}
 	}
 
