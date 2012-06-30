@@ -16,6 +16,7 @@ Current version includes the following functionality:
 * Expiring password resets with confirmation e-mail;
 * Admin authorization;
 * Admin CRUD for managing users.
+* Friendly redirects
 
 
 Change Log
@@ -23,6 +24,11 @@ Change Log
 
 The following changes have been made in version 2.0:
 
+**Version 2.1.1**
+* Added friendly redirects.
+* Minor bug fixes and dead code clean-up.
+
+**Version 2.1.0**
 * New RESTful Sessions controller.
 * New RESTful password resets controller.
 * No longer using a separate table to store password reset tokens. Password reset tokens are now stored in their own column in the users table. The previous release complicated things needlessly.
@@ -35,7 +41,6 @@ Coming Soon
 -----------
 
 * Account verification.
-* Friendly redirects.
 
 Usage
 -----
