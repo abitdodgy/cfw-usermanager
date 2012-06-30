@@ -9,8 +9,6 @@
 		beforeSave("sanitize,securePassword");
 		beforeValidation("setSalt");
 
-		property(name="role", default="user");
-
 		validatesConfirmationOf("email,password");
 		validatesFormatOf(property="email", type="email");
 		validatesFormatOf(property="password", regEx="^.*(?=.{8,})(?=.*\d)(?=.*[a-z]).*$", message="Your password must be at least 8 characters long and contain a mixture of numbers and letters.");
