@@ -24,3 +24,4 @@
 	</div>
 
 </cfoutput>
+<cfdump var="#user.allErrors()#">
