@@ -29,7 +29,7 @@ component
 		}
 		else {
 			signIn(user);
-			redirectTo(controller="users", action="index");
+			redirectBackOr(controller="users", action="index");
 		}
 	}
 
