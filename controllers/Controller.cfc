@@ -25,6 +25,7 @@ component
 	 */
 	private void function isAuthenticated() {
 		if ( ! signedIn() ) {
+			dump(var=request, abort=true);
 			redirectTo(route="signIn");	
 		}
 	}
