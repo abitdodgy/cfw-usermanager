@@ -22,7 +22,7 @@
 				<p>#linkTo(text="&larr; Back", action="index")#</p>
 			</div>
 			<div class="span6 ar">
-				<cfif signedIn() AND (user.id EQ currentUser.id || currentUser.admin)>
+				<cfif signedIn() AND user.id EQ currentUser.id>
 					<span class="ar">
 						#linkTo(text="Edit Profile", action="edit", key=user.id, class="btn")# &nbsp;  
 						#linkTo(text="Delete Account", action="delete", key=user.id, class="btn danger", confirm="Are you sure you want to delete your account?")#

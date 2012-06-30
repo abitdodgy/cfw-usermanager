@@ -18,7 +18,7 @@
 	 */
 	private void function isAuthorized() {
 		user = model("user").findByKey(params.key);
-		if ( (! IsObject(user)) || (! user.id == currentUser.id && ! currentUser.admin) ) {
+		if ( ! IsObject(user) || ! user.id == currentUser.id ) {
 			redirectTo(route="home");
 		}
 	}
@@ -28,7 +28,7 @@
 	 */
 	private void function protectFromMassAssignment() {
 		if ( StructKeyExists(params, "user") ) {
-			if ( ! signedIn() || ! currentUser.admin) {
+			if ( ! signedIn() ) {
 				params.user.admin = 0;	
 			}
 		}
