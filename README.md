@@ -1,46 +1,59 @@
-COLDFUSION ON WHEELS USER MANAGER DEMO
+ColdFusion on Wheels User Manager Demo
 ======================================
 
-CFW User Manager is a demo app for ColdFusion one Wheels. It's meant to be a toolkit for kickstarting a project that requires session management, password reset, and user and management functionality.
+User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
 
 
-Current Version
----------------
+Current Version 2.1.0
+---------------------
 
 Current version includes the following functionality:
 
-* User registration with verification e-mail;
-* User authentication
-* Update functionality for user profile, email address, and password with verification;
-* Password hashing and salting on creation, update, and reset;
-* Confirmation e-mail is sent to confirm password reset requests;
-* Confirmation e-mail is sent to confirm e-mail update requests;
-* Expiring security token functionality for password/e-mail updates resets;
-* Admin section for managing users.
+* Registration;
+* Authentication;
+* CRUD functionality for User model;
+* Password hashing and salting;
+* Expiring password resets with confirmation e-mail;
+* Admin authorization;
+* Admin CRUD for managing users.
 
+
+Change Log
+----------
+
+The following changes have been made in version 2.0:
+
+* New RESTful Sessions controller.
+* New RESTful password resets controller.
+* No longer using a separate table to store password reset tokens. Password reset tokens are now stored in their own column in the users table. The previous release complicated things needlessly.
+* Removed account verification. Will add this at a later stage.
+* Change database schema: dropped the tokens and roles tables.
+* Massive refactoring.
+* Changed schema again. The role is not a boolean column in the users table. This means refactoring authorization and authentication, and rereating the schema. SQL file has been included.
 
 Coming Soon
 -----------
 
-I will add the following features in later versions.
-
-* Ability to force password update after reset. Currently users are redirect to the update form, but there's nothing stopping them from navigating away;
-* User role based security.
+* Account verification.
+* Friendly redirects.
 
 Usage
 -----
 
-Download and file and run the included SQL file to create the database.
+1. Create the database using the included SQL file.
+2. Create the datasource.
 
-You need to create the schema from the included SQL file. You will also need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment.
+Note that this version uses a new schema. The old schema is no longer compatible with this version.
 
-**Requires ColdFusion 9+ or Railo 3+.**
+You need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment (password update verification).
+
+**Requires ColdFusion 9 or Railo 3+.**
 
 
 Versioning
 ----------
 
-I'm not really sure how, but I will try to maintain CFW User Manager under the Semantic Versioning guidelines as much as possible (once I've read them, that is).
+I will try to maintain CFW User Manager under the Semantic Versioning guidelines as much as possible (once I've read them, that is).
 
 Releases will be numbered with the follow format:
 

@@ -1,52 +1,38 @@
 component
 	extends="Wheels"
 {
+	/**
+	 * @hint Constructor
+	 */
+	public void function init() {
+		filters(through="getCurrentUser");
+	}
+
 	// --------------------------------------------------
 	// Filters
 
-	/*
-	 * @hint Restricts access to unauthorized users.
-	 * @description The user's original destination is kept in the session so that he/she can be redirected there after login.
-	 * @role Restrict access if current user role does not match this argument.
+	/**
+	 * @hint Loads the current user in session.
 	 */
-	private void function restrictAccess(string role) {
-		if ( ! isConnected() ) {
-			session.redirectParams = params;
-			redirectTo(controller="sessions", action="index");
-		}
-		else if ( StructKeyExists(arguments, "role") ) {
-			if ( ! arguments.role == getConnectedUser("role") ) disconnect();	
+	private void function getCurrentUser() {
+		if ( signedIn() ) {
+			currentUser = currentUser();
 		}
 	}
 
-	// --------------------------------------------------
-	// Misc
-
 	/*
-	 * @hint Redirects the user after login/logged in users. If redirect params exist in the session, those are used instead.
-	 * @role Determines if user should be redirected to customer or admin dashboard.
-	 * @action The controller action to redirect to; set to index for convenience.
+	 * @hint Ensures user is authenticated.
 	 */
-	public void function redirectAfterLogin(string role=getConnectedUser("role"), string action="index") {
-		if ( StructKeyExists(session, "redirectParams") ) {
-			var args = StructCopy(session.redirectParams);
-			StructDelete(session, "redirectParams");
-			redirectTo(argumentCollection=args);
-		}
-		else {
-			switch(arguments.role) {
-				case "customer": {
-					arguments.controller = "customers";
-					break;				
-				}
-				case "admin": {
-					arguments.controller = "admin";
-					break;				
-				}
-				default: disconnect();
-			}
-			redirectTo(argumentCollection=arguments);			
+	private void function isAuthenticated() {
+		if ( ! signedIn() ) {
+			redirectTo(route="signIn");	
 		}
 	}
-
+	
+	/**
+	 * @hint Redirects the user away if its logged in.
+	 */
+	private void function redirectIfLoggedIn() {
+		if ( signedIn() ) redirectTo(controller="users", action="index");
+	}
 }

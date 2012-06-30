@@ -1,65 +1,43 @@
 component
 	extends="Controller"
-	hint="The sessions controller handles user authentication."
+	hint="Handles user authentication."
 {
-	/*
-	 * @hint Constructor
+	/**
+	 * @hint Constructor.
 	 */
 	public void function init() {
-		filters(through="checkLoginParams", only="login");
+		filters(through="redirectIfLoggedIn", except="delete"); 
 	}
 
 	// --------------------------------------------------
-	// Filters
+	// RESTful style actions
 
 	/*
-	 * @hint Intercepts any request to authenticate that does not have a valid email address and a password.
+	 * @hint Renders the login page.
 	 */
-	private void function checkLoginParams() {
-		if ( (! StructKeyExists(params, "email") || ! Len(params.email)) || (! StructKeyExists(params, "password") || ! Len(params.password)) ) {
-			badLogin();
-		}
+	public void function new() {
 	}
 
-	// --------------------------------------------------
-	// Public
-
 	/*
-	 * @hint Renders the index page.
+	 * @hint Logs in the user.
 	 */
-	public void function index() {}
-
-	/*
-	 * @hint Logs-in a user.
-	 */
-	public void function login() {
-		var user = model("user").findOneByEmail(value=params.email, include="role");
-
+	public void function create() {
+		var user = model("user").findOneByEmail(params.email);
 		if ( ! IsObject(user) || ! user.authenticate(params.password) ) {
-			badLogin();
+			flashInsert(message="We could not log you in. Please try that again.", messageType="error");
+			renderPage(action="new");
 		}
 		else {
-			connect(user);
-			redirectAfterLogin();
+			signIn(user);
+			redirectTo(controller="users", action="index");
 		}
 	}
 
 	/*
-	 * @hint Logs a user out.
+	 * @hint Logs out the user.
 	 */
-	public void function logout() {
-		disconnect();
+	public void function delete() {
+		signOut();
+		redirectTo(route="home");
 	}
-
-	// --------------------------------------------------
-	// Private
-
-	/*
-	 * @hint Handles bad login attempts.
-	 */
-	private void function badLogin() {
-		flashInsert(message="We could not log you in. Please try that again.", messageType="error");
-		renderPage(action="index");
-	}
-
 }

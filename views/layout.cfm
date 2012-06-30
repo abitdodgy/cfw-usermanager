@@ -22,23 +22,19 @@
 			<div class="fill">
 				<div class="container">
 					<ul class="nav">
-						<li>#linkTo(route="home", class="brand", text="CFW User Manager")#</li>
-						<li><a>A ColdFusion on Wheels Demo App</a></li>
+						<li>#linkTo(route="home", class="brand", text="User Manager")#</li>
+						<li>#linkTo(text="Home", route="home")#</li>
+						<li>#linkTo(text="Users", controller="users", action="index")#</li>
 					</ul>
 					<ul class="nav secondary-nav">
-						<cfif isConnected()>
-							<li><a>Welcome, #session.currentUser.name#</a></li>
+						<cfif signedIn()>
+							<li><a>#currentUser.name#</a></li>
 							<li><a>|</a></li>
-							<cfif getConnectedUser("role") EQ "admin">
-								<li>#linkTo(text="Dashboard", controller="admin", action="index")#</li>
-							<cfelseif getConnectedUser("role") EQ "customer">
-								<li>#linkTo(text="Dashboard", controller="customers", action="index")#</li>
-							</cfif>
-							<li><a>|</a></li>
-							<li>#linkTo(text="Sign out", controller="sessions", action="logout")#</li>
+							<li>#linkTo(text="Profile", route="profile", key=currentUser.id)#</li>
+							<li>#linkTo(text="Sign out", route="signOut")#</li>
 						<cfelse>
-							<li>#linkTo(text="Sign Up", controller="customers", action="new")#</li>
-							<li>#linkTo(text="Sign in", controller="sessions", action="index")#</li>
+							<li>#linkTo(text="Sign Up", route="signUp")#</li>
+							<li>#linkTo(text="Sign in", route="signIn")#</li>
 						</cfif>
 					</ul>
 				</div>
