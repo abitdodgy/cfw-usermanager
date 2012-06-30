@@ -4,7 +4,7 @@ ColdFusion on Wheels User Manager Demo
 User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
 
 
-Current Version 2.1.0
+Current Version 2.1.1
 ---------------------
 
 Current version includes the following functionality:
