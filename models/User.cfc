@@ -9,13 +9,6 @@
 		beforeSave("sanitize,securePassword");
 		beforeValidation("setSalt");
 
-<<<<<<< HEAD
-		property(name="role", sql="SELECT roles.name FROM roles WHERE roles.id = users.roleId");
-		property(name="isConfirmed", default="0");
-=======
-		property(name="role", default="user");
->>>>>>> 2.1.0
-
 		validatesConfirmationOf("email,password");
 		validatesFormatOf(property="email", type="email");
 		validatesFormatOf(property="password", regEx="^.*(?=.{8,})(?=.*\d)(?=.*[a-z]).*$", message="Your password must be at least 8 characters long and contain a mixture of numbers and letters.");
@@ -90,5 +83,4 @@
 		}
 		return arguments.password;
 	}
-
 }
