@@ -63,8 +63,9 @@ Usage
 
 1. Create the database using the included SQL file.
 2. Create the datasource.
+3. Make sure you include the lib folder which contains BCrypt.class.
 
-This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. If you have problems, check the path to the class in the User.cfc model. We create a BCrypt object in two methods: securePassword() and authenticate().
+This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. If you have problems, check the path to the class in the User.cfc model. BCrypt objects are created in two methods: securePassword() and authenticate().
 
 Note that this version uses a new schema. The old schema is no longer compatible with this version.
 
