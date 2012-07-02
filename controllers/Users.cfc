@@ -14,21 +14,11 @@
 	// Filters
 
 	/*
-	 * @hint Ensures it's the correct user.
-	 */
-	private void function isAuthorized() {
-		user = model("user").findByKey(params.key);
-		if ( ! IsObject(user) || ! user.id == currentUser.id ) {
-			redirectTo(route="home");
-		}
-	}
-
-	/*
 	 * @hint Ensures the admin setting is set to 0 in case a user tries to exploit mass assignment.
 	 */
 	private void function protectFromMassAssignment() {
 		if ( StructKeyExists(params, "user") ) {
-			params.user.admin = 0;	
+			params.user.admin = 0;
 		}
 	}
 
@@ -63,6 +53,7 @@
 		user = model("user").new(params.user);
 		if ( user.save() ) {
 			signIn(user);
+			//sendMail(to=user.email, subject="Email confirmation", template="/templates/emailConfirmation", user=user);
 			redirectTo(route="profile", key=user.id, message="Account created successfully.", messageType="success");
 		}
 		else {

@@ -25,6 +25,9 @@
 						<li>#linkTo(route="home", class="brand", text="User Manager")#</li>
 						<li>#linkTo(text="Home", route="home")#</li>
 						<li>#linkTo(text="Users", controller="users", action="index")#</li>
+						<cfif signedIn() AND currentUser.admin>
+							<li>#linkTo(text="Admin", controller="admin", action="index")#</li>
+						</cfif>
 					</ul>
 					<ul class="nav secondary-nav">
 						<cfif signedIn()>

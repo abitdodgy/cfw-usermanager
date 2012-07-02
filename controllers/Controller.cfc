@@ -29,7 +29,17 @@ component
 			redirectTo(route="signIn");	
 		}
 	}
-	
+
+	/*
+	 * @hint Ensures it's the correct user.
+	 */
+	private void function isAuthorized() {
+		user = model("user").findByKey(params.key);
+		if ( ! IsObject(user) || ! user.id == currentUser.id ) {
+			redirectTo(route="home");
+		}
+	}
+
 	/**
 	 * @hint Redirects the user away if its logged in.
 	 */
