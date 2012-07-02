@@ -56,7 +56,7 @@ This change requires a new SQL file (included). The following changes have been 
 Coming Soon
 -----------
 
-* Account verification.
+* Update to Bootstrap 2.0.
 
 Usage
 -----
