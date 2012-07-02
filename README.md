@@ -4,7 +4,7 @@ ColdFusion on Wheels User Manager Demo
 User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
 
 
-Current Version 2.1.1
+Current Version 2.2.0
 ---------------------
 
 Current version includes the following functionality:
@@ -12,17 +12,33 @@ Current version includes the following functionality:
 * Registration;
 * Authentication;
 * CRUD functionality for User model;
-* Password hashing and salting;
+* Password hashing and salting using bCrypt;
 * Expiring password resets with confirmation e-mail;
+* Email confirmation;
 * Admin authorization;
 * Admin CRUD for managing users.
 * Friendly redirects
 
-
 Change Log
 ----------
 
-The following changes have been made in version 2.0:
+This change requires a new SQL file (included). The following changes have been made:
+
+**Version 2.2.0**
+* Added a new RESTful Confirmations.cfc controller for confirming email addresses.
+* Added two columns in the schema: boolean confirmed, and varchar confirmation token.
+* Added new SQL file.
+* Refactored how tokens are generated now for password resets and confirmations. Using a stripped UUID as generate secret key was causing bad URLs.
+* Added an Admin link if the user is signed in as an admin.
+* Moved isAthorized method to Controller.cfc so it can be reused by Confirmations.cfc.
+* Added new callback to create a confirmation token when the user signs up.
+* Removed dead code and email templates left over from version 1.
+* Users#index.cfm now shows confirmation status for users.
+* Switched all places from using DateFormat() to a custom formatDate(). This makes changing the date format easier as it's in a single place.
+
+
+**Version 2.1.2**
+* Switched password hashing from using a SHA-512 over 1024 iterations to using BCrypt.
 
 **Version 2.1.1**
 * Added friendly redirects.
@@ -47,6 +63,8 @@ Usage
 
 1. Create the database using the included SQL file.
 2. Create the datasource.
+
+This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. If you have problems, check the path to the class in the User.cfc model. We create a BCrypt object in two methods: securePassword() and authenticate().
 
 Note that this version uses a new schema. The old schema is no longer compatible with this version.
 
