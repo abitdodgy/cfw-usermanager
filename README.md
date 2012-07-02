@@ -1,6 +1,8 @@
 ColdFusion on Wheels User Manager Demo
 ======================================
 
+**Note**: This branch is a work in progress. Please see master.
+
 User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
 
 
