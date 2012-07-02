@@ -10,7 +10,7 @@
 	}
 
 	// --------------------------------------------------
-	// REST
+	// RESTful Actions
 
 	/**
 	 * @hint Renders the reset form page.
@@ -46,7 +46,7 @@
 	}
 	
 	/**
-	 * @hint Renders the edit user page where users enter a new passwords.
+	 * @hint Updates the user's password.
 	 */
 	public void function update() {
 		user = model("user").findOneByPasswordResetToken(params.key);

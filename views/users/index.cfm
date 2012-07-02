@@ -18,7 +18,8 @@
 				<div class="span4">
 					<div class="well">
 						<h5>#users.name#</h5>
-						<p>Joined on #DateFormat(users.createdAt, "medium")#</p>
+						<p>Joined on #formatDate(users.createdAt)#</p>
+						<p>Confirmed: #users.confirmed ? "Yes" : "No"#</p>
 						<p>#linkTo(text="View Profile", route="profile", key=users.id)#</p>
 					</div>
 				</div>

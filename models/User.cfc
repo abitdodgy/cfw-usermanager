@@ -6,6 +6,7 @@
 	 * @hint Constructor
 	 */
 	public void function init() {
+		beforeCreate("setEmailConfirmationToken");
 		beforeSave("sanitize,securePassword");
 
 		validatesConfirmationOf("email,password");
@@ -44,6 +45,13 @@
 		}
 	}
 
+	/**
+	 * @hint Sets the emailConfirmationToken for the user.
+	 */
+	private void function setEmailConfirmationToken() {
+		this.emailConfirmationToken = generateToken();	
+	}
+
 	// --------------------------------------------------
 	// Public
 
@@ -59,7 +67,7 @@
 	 * @hint Creates a password reset token
 	 */
 	public void function createPasswordResetToken() {
-		this.passwordResetToken = URLEncodedFormat(GenerateSecretKey("AES", 256));
+		this.passwordResetToken = generateToken();
 		this.passwordResetAt = Now();
 		this.save();
 	}
@@ -70,5 +78,12 @@
 	public void function passwordToBlank() {
 		if ( StructKeyExists(this, "password") ) this.password = "";
 		if ( StructKeyExists(this, "passwordConfirmation") ) this.passwordConfirmation = "";
+	}
+
+	/**
+	 * @hint Generates a random token.
+	 */
+	public string function generateToken() {
+		return Replace(LCase(CreateUUID()), "-", "", "all");
 	}
 }
