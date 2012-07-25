@@ -63,14 +63,14 @@ Usage
 
 1. Create the database using the included SQL file.
 2. Add the datasource in ColdFusion Admin or Railo.
-3. This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. Depending on what you are using (Railo or ColdFusion), see instructions below.
+3. This app uses `BCrypt.class` for password hashing. It's included in the `/lib` directory. Make sure it's available to the app. Depending on what you are using (Railo or ColdFusion), see instructions below.
 4. Setup your email credentials in `/config/settings.cfm`. The e-mail functionality is commented out at the moment (optional).
 
 **Railo Users**
 
 Make sure you include the `/lib` folder, which contains `BCrypt.class`. BCrypt.class is needed for password encryption. The path is specified in `User.cfc` where we create our Java objects. For example:
 
-    CreateObject('java','BCrypt.class','/lib')`
+    CreateObject('java','BCrypt.class','/lib')
 
 **ColdFusion Users**
 
