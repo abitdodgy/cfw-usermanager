@@ -78,9 +78,9 @@ After adding BCrypt.class to ColdFusion Admin, edit `User.cfc` to remove the thi
 
     CreateObject('java','bCrypt')
 
-The third argument, which is the path to the class file, is Railo specific, and causes an error in ColdFusion if left unchanged. There should be two locations to edit as of version 2.2.1.
+The third argument, which is the path to the class file, is Railo specific, and causes an error in ColdFusion if left unchanged. There should be two locations to edit as of version 2.2.0.
 
-Note that version 2.2.1 uses a new schema. The old schema is no longer compatible with this version.
+Note that version 2.2.0 uses a new schema. The old schema is no longer compatible with this version.
 
 **Requires ColdFusion 9 or Railo 3+.**
 
