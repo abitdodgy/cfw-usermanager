@@ -62,17 +62,27 @@ Usage
 -----
 
 1. Create the database using the included SQL file.
-2. Create the datasource.
-3. Make sure you include the lib folder which contains BCrypt.class.
+2. Add the datasource in ColdFusion Admin or Railo.
+3. This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. Depending on what you are using (Railo or ColdFusion), see instructions below.
+4. Setup your email credentials in `/config/settings.cfm`. The e-mail functionality is commented out at the moment (optional).
 
-This app uses BCrypt.class for password hashing. It's included in the lib directory. Make sure it's available to the app. If you have problems, check the path to the class in the User.cfc model. BCrypt objects are created in two methods: securePassword() and authenticate().
+**Railo Users**
 
-Note that this version uses a new schema. The old schema is no longer compatible with this version.
+Make sure you include the `/lib` folder, which contains `BCrypt.class`. BCrypt.class is needed for password encryption. The path is specified in `User.cfc` where we create our Java objects. For example:
 
-You need to setup your email credentials in /config/settings.cfm. The e-mail functionality is commented out at the moment (password update verification).
+    CreateObject('java','BCrypt.class','/lib')`
+
+**ColdFusion Users**
+
+After adding BCrypt.class to ColdFusion Admin, edit `User.cfc` to remove the third argument from any calls to `CreateObject()`. For example:
+
+    CreateObject('java','bCrypt')
+
+The third argument, which is the path to the class file, is Railo specific, and causes an error in ColdFusion if left unchanged. There should be two locations to edit as of version 2.2.1.
+
+Note that version 2.2.1 uses a new schema. The old schema is no longer compatible with this version.
 
 **Requires ColdFusion 9 or Railo 3+.**
-
 
 Versioning
 ----------
