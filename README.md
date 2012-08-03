@@ -22,7 +22,10 @@ Current version includes the following functionality:
 Change Log
 ----------
 
-This change requires a new SQL file (included). The following changes have been made:
+The following are the most recent changes. For a full list of changes, please see the 
+[change log](https://github.com/abitdodgy/cfw-usermanager/wiki/Change-Log)
+
+This version requires a new SQL file (included). The following changes have been made:
 
 **Version 2.2.0**
 * Added a new RESTful Confirmations.cfc controller for confirming email addresses.
@@ -36,27 +39,13 @@ This change requires a new SQL file (included). The following changes have been 
 * Users#index.cfm now shows confirmation status for users.
 * Switched all places from using DateFormat() to a custom formatDate(). This makes changing the date format easier as it's in a single place.
 
-
-**Version 2.1.2**
-* Switched password hashing from using a SHA-512 over 1024 iterations to using BCrypt.
-
-**Version 2.1.1**
-* Added friendly redirects.
-* Minor bug fixes and dead code clean-up.
-
-**Version 2.1.0**
-* New RESTful Sessions controller.
-* New RESTful password resets controller.
-* No longer using a separate table to store password reset tokens. Password reset tokens are now stored in their own column in the users table. The previous release complicated things needlessly.
-* Removed account verification. Will add this at a later stage.
-* Change database schema: dropped the tokens and roles tables.
-* Massive refactoring.
-* Changed schema again. The role is not a boolean column in the users table. This means refactoring authorization and authentication, and rereating the schema. SQL file has been included.
+[Change Log](https://github.com/abitdodgy/cfw-usermanager/wiki/Change-Log)
 
 Coming Soon
 -----------
 
 * Update to Bootstrap 2.0.
+* Remember-me login.
 
 Usage
 -----
