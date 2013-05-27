@@ -7,7 +7,7 @@
 	public void function init() {
 		super.init();
 		filters(through="isAuthenticated,isAuthorized", only="edit,update,delete");
-		filters(through="protectFromMassAssignment", ony="create,update");
+		filters(through="protectFromMassAssignment", only="create,update");
 	}
 
 	// --------------------------------------------------
