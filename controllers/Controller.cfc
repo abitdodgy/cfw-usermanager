@@ -26,7 +26,7 @@ component
 	private void function isAuthenticated() {
 		if ( ! signedIn() ) {
 			storeLocation(params);
-			redirectTo(route="signIn");	
+			redirectTo(route="signIn");
 		}
 	}
 
@@ -36,7 +36,7 @@ component
 	private void function isAuthorized() {
 		user = model("user").findByKey(params.key);
 		if ( ! IsObject(user) || ! user.id == currentUser.id ) {
-			redirectTo(route="home");
+			redirectTo(route="home", message="Unauthorized!", messageType="error");
 		}
 	}
 
@@ -44,6 +44,8 @@ component
 	 * @hint Redirects the user away if its logged in.
 	 */
 	private void function redirectIfLoggedIn() {
-		if ( signedIn() ) redirectTo(controller="users", action="index");
+		if ( signedIn() ) {
+			redirectTo(controller="users", action="index", message="You are already signed in.", messageType="info");
+		}
 	}
 }

@@ -6,7 +6,7 @@ component
 	 * @hint Constructor.
 	 */
 	public void function init() {
-		filters(through="redirectIfLoggedIn", except="delete"); 
+		filters(through="redirectIfLoggedIn", except="delete");
 	}
 
 	// --------------------------------------------------
@@ -23,13 +23,12 @@ component
 	 */
 	public void function create() {
 		var user = model("user").findOneByEmail(params.email);
-		if ( ! IsObject(user) || ! user.authenticate(params.password) ) {
+		if ( IsObject(user) && user.authenticate(params.password) ) {
+			signIn(user);
+			redirectBackOr(controller="users", action="index", message="Signed in successfully.", messageType="success");
+		} else {
 			flashInsert(message="We could not log you in. Please try that again.", messageType="error");
 			renderPage(action="new");
-		}
-		else {
-			signIn(user);
-			redirectBackOr(controller="users", action="index");
 		}
 	}
 

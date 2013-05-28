@@ -1,33 +1,39 @@
 ColdFusion on Wheels User Manager Demo
 ======================================
 
-User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires session management and authorization functionality.
+CFW User Manager is a demo app for ColdFusion on Wheels. It's meant to be a toolkit for learning or kickstarting a project that requires basic session management and authorization, as well as basic CRUD.
 
-
-Current Version 2.2.0
+Current Version 2.3.0
 ---------------------
 
 Current version includes the following functionality:
 
-* Registration;
-* Authentication;
-* CRUD functionality for User model;
-* Password hashing and salting using bCrypt;
-* Expiring password resets with confirmation e-mail;
-* Email confirmation;
-* Admin authorization;
-* Admin CRUD for managing users.
+* User registration
+* Authentication and authorization
+* Basic CRUD for User model
+* Password hashing and salting using bCrypt
+* Expiring password resets
+* Email confirmation
+* Basic admin CRUD
 * Friendly redirects
 
 Change Log
 ----------
 
-The following are the most recent changes. For a full list of changes, please see the 
+**Version 2.3.0**
+* Added some flash messages to `redirectIfLoggedIn()` and `isAuthorized()` methods.
+* Simplified authentication logic in the sessions controller.
+* Changed bCyrpt object creation to dynamically detect server type. Suggested by [James Harvey](https://github.com/webdevsourcerer).
+* Removed `IsapiRewrite4.ini` and `web.config` to reduce clutter. If you use IIS, you may want to add either one depending on your version. Grab them from CFWheels repo.
+* Fixed typo in `Users.cfc` filters arguments. [Adam Chapman](https://github.com/chapmandu)
+
+**Version 2.2.0**
+
+The following are the most recent changes. For a full list of changes, please see the
 [change log](https://github.com/abitdodgy/cfw-usermanager/wiki/Change-Log)
 
 This version requires a new SQL file (included). The following changes have been made:
 
-**Version 2.2.0**
 * Added a new RESTful Confirmations.cfc controller for confirming email addresses.
 * Added two columns in the schema: boolean confirmed, and varchar confirmation token.
 * Added new SQL file.
@@ -46,6 +52,7 @@ Coming Soon
 
 * Update to Bootstrap 2.0.
 * Remember-me login.
+* Upgrade to CFWheels 1.2.
 
 Usage
 -----
@@ -63,13 +70,7 @@ Make sure you include the `/lib` folder, which contains `BCrypt.class`. BCrypt.c
 
 **ColdFusion Users**
 
-After adding BCrypt.class to ColdFusion Admin, edit `User.cfc` to remove the third argument from any calls to `CreateObject()`. For example:
-
-    CreateObject('java','bCrypt')
-
-The third argument, which is the path to the class file, is Railo specific, and causes an error in ColdFusion if left unchanged. There should be two locations to edit as of version 2.2.0.
-
-Note that version 2.2.0 uses a new schema. The old schema is no longer compatible with this version.
+Add BCrypt.class to ColdFusion Admin. In previous versions you needed to edit `User.cfc` to remove the third argument from any calls to `CreateObject()` as it was Railo specific. Since version 2.2.3 this is no longer necessary; the app will detect your server automatically and create the object correctly.
 
 **Requires ColdFusion 9 or Railo 3+.**
 
