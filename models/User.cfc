@@ -39,9 +39,9 @@
 	 */
 	private void function securePassword() {
 		if ( StructKeyExists(this, "passwordConfirmation") ) {
-			var bCrypt = CreateObject("java", "BCrypt", "/lib");
+			var bCrypt = bCrypt();
 			this.salt = bCrypt.genSalt();
-			this.password = bCrypt.hashpw(this.password, this.salt);	
+			this.password = bCrypt.hashpw(this.password, this.salt);
 		}
 	}
 
@@ -49,7 +49,7 @@
 	 * @hint Sets the emailConfirmationToken for the user.
 	 */
 	private void function setEmailConfirmationToken() {
-		this.emailConfirmationToken = generateToken();	
+		this.emailConfirmationToken = generateToken();
 	}
 
 	// --------------------------------------------------
@@ -59,8 +59,7 @@
 	 * @hint Authenticates a user object.
 	 */
 	public boolean function authenticate(required string password) {
-		var bCrypt = CreateObject("java", "BCrypt", "/lib");
-		return ! Compare(this.password, bCrypt.hashpw(arguments.password, this.salt));
+		return ! Compare(this.password, bCrypt().hashpw(arguments.password, this.salt));
 	}
 
 	/**
@@ -85,5 +84,19 @@
 	 */
 	public string function generateToken() {
 		return Replace(LCase(CreateUUID()), "-", "", "all");
+	}
+
+	// --------------------------------------------------
+	// Private
+
+	/**
+	 * @hint Creates bCrypt object for authentication and password encryption.
+	 */
+	private any function bCrypt() {
+		if ( StructKeyExists(server, "railo") ) {
+			return CreateObject("java", "BCrypt", "/lib");
+		} else {
+			return CreateObject("java", "BCrypt");
+		}
 	}
 }
